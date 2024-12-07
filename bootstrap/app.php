@@ -9,7 +9,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         using: function () {
             Route::middleware('web')
-                ->namespace('App/Http/Controller')
                 ->group(base_path('routes/web.php'));
         },
         //web: __DIR__ . '/../routes/web.php',

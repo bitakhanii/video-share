@@ -22,7 +22,7 @@
     <!-- Responsive CSS -->
     <script
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/main.css', 'resources/js/main.js'])
 
     {{--    <link rel="stylesheet" href="{{ asset('css/main.css') }}">--}}
 

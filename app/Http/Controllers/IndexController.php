@@ -19,6 +19,6 @@ class IndexController extends Controller
 
     public function test()
     {
-        Auth::onceBasic();
+        dd(Auth::user());
     }
 }

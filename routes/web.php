@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryVideoController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,7 +14,17 @@ Route::get('videos/{video}/edit', [VideoController::class, 'edit'])->name('video
 Route::post('videos/{video}', [VideoController::class, 'update'])->name('videos.update');
 Route::get('categories/{category:slug}/videos', [CategoryVideoController::class, 'index'])->name('categories.videos.index');
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
+
 
 Route::get('/test', [IndexController::class, 'test'])->name('test');
-
-
