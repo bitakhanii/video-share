@@ -1558,7 +1558,7 @@ h1.new-video-title .fa {
     top: 0px;
     z-index: -1;
     background-attachment: fixed;
-    background-image: url(../demo_img/sing-up-ba.jpg);
+    background-image: url(../img/sing-up-ba.jpg);
     opacity: 0.2;
 }
 
@@ -1576,7 +1576,7 @@ h1.new-video-title .fa {
     top: 0px;
     z-index: -1;
     background-attachment: fixed;
-    background-image: url(../demo_img/log-in-ba.jpg);
+    background-image: url(../img/log-in-ba.jpg);
     opacity: 0.2;
 }
 

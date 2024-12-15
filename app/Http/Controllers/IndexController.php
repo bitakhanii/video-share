@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class IndexController extends Controller
 {
@@ -19,6 +20,6 @@ class IndexController extends Controller
 
     public function test()
     {
-        dd(Auth::user());
+        return fake()->realText(500);
     }
 }

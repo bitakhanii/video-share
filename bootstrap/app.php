@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias(['verify-email' => \App\Http\Middleware\VerifyEmail::class]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

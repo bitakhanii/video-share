@@ -11,7 +11,7 @@ class Video extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'slug', 'description', 'url', 'thumbnail', 'length', 'category_id',
+        'name', 'slug', 'description', 'url', 'thumbnail', 'length', 'category_id', 'user_id',
     ];
 
     protected $perPage = 4;
@@ -46,5 +46,20 @@ class Video extends Model
     public function getCategoryNameAttribute()
     {
         return $this->category?->name;
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function getOwnerNameAttribute()
+    {
+        return $this->user?->name;
+    }
+
+    public function getOwnerAvatarAttribute()
+    {
+        return $this->user?->gravatar;
     }
 }
