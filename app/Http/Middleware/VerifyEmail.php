@@ -15,11 +15,8 @@ class VerifyEmail
      */
     public function handle(Request $request, Closure $next): Response
     {
-        /*if (!auth()->user()->hasVerifiedEmail()) {
+        if (!auth()->user()->hasVerifiedEmail()) {
             return redirect()->route('index')->with(['alert' => __('alerts.danger.verify'), 'alert-type' => 'danger']);
-        }*/
-        if (auth()->user() && auth()->user()->isAdmin) {
-            return $next($request);
         }
         return redirect('/')->with('error', 'شما مجاز به دسترسی نیستید.');
     }

@@ -17,6 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias(['verify-email' => \App\Http\Middleware\VerifyEmail::class]);
+        $middleware->redirectTo(function ($request) {
+            if (! $request->expectsJson()) {
+                return route('login.create'); // نام جدید روت لاگین
+            }
+        });
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

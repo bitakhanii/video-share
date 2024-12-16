@@ -22,6 +22,6 @@ class VerifyEmailController extends Controller
             event(new Verified($request->user()));
         }
 
-        return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
+        return redirect()->intended(route('dashboard'))->with(['alert' => __('alerts.success.verify', ['attribute' => 'ایمیل']), 'alert-type' => 'success']);
     }
 }

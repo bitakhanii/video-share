@@ -20,6 +20,6 @@ class IndexController extends Controller
 
     public function test()
     {
-        return fake()->realText(500);
+        dd('hello');
     }
 }

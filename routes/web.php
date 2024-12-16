@@ -32,7 +32,7 @@ require __DIR__ . '/auth.php';
 
 
 /* Test Routes */
-Route::get('/test', [IndexController::class, 'test'])->name('test')->middleware('verify-email');
+Route::get('/test', [IndexController::class, 'test'])->name('test');
 Route::get('/email', function () {
     $user = \App\Models\User::first();
     return Mail::to('bita@gmail.com')->send(new VerifyEmailMail($user));
