@@ -35,6 +35,7 @@ class VideoController extends Controller implements HasMiddleware
 
     public function show(Request $request, Video $video)
     {
+        $video->load(['comments.user']);
         return view('videos.show', compact('video'));
     }
 

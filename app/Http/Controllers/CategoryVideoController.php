@@ -10,7 +10,7 @@ class CategoryVideoController extends Controller
     public function index(Category $category)
     {
         $title = $category->name;
-        $videos = $category->videos()->paginate();
+        $videos = $category->videos()->with(['user', 'category'])->paginate();
         return view('videos.index', compact('title', 'videos'));
     }
 }

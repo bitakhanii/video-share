@@ -147,7 +147,7 @@ return [
         'area'                     => 'منطقه',
         'available'                => 'موجود',
         'birthday'                 => 'تاریخ تولد',
-        'body'                     => 'بدن',
+        'body'                     => 'متن',
         'city'                     => 'شهر',
         'content'                  => 'محتوا',
         'country'                  => 'کشور',

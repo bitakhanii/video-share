@@ -62,4 +62,9 @@ class Video extends Model
     {
         return $this->user?->gravatar;
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
+    }
 }
