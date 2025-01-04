@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Likeable;
 use Hekmatinasser\Verta\Verta;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
-    use HasFactory;
+    use HasFactory, Likeable;
     protected $fillable = [
         'user_id', 'comment_id', 'body',
     ];

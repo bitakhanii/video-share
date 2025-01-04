@@ -36,7 +36,7 @@
                 <!-- upload -->
                 <div class="col-md-8">
                     <h1 class="page-title"><span>آپلود</span> فیلم</h1>
-                    <form action="{{ route('videos.store') }}" method="POST">
+                    <form action="{{ route('videos.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
@@ -44,20 +44,12 @@
                                 <input name="name" type="text" class="form-control" value="{{ old('name') }}" placeholder="@lang('labels.name')">
                             </div>
                             <div class="col-md-6">
-                                <label>@lang('labels.length')</label>
-                                <input type="text" name="length" class="form-control" value="{{ old('length') }}" placeholder="@lang('labels.length')">
-                            </div>
-                            <div class="col-md-6">
                                 <label>@lang('labels.slug')</label>
                                 <input type="text" name="slug" class="form-control" value="{{ old('slug') }}" placeholder="@lang('labels.slug')">
                             </div>
                             <div class="col-md-6">
-                                <label>@lang('labels.url')</label>
-                                <input type="text" name="url" class="form-control" value="{{ old('url') }}" placeholder="@lang('labels.url')">
-                            </div>
-                            <div class="col-md-6">
-                                <label>@lang('labels.thumbnail')</label>
-                                <input type="text" name="thumbnail" class="form-control" value="{{ old('thumbnail') }}" placeholder="@lang('labels.thumbnail')">
+                                <label>@lang('labels.file')</label>
+                                <input type="file" name="file" class="form-control">
                             </div>
                             <div class="col-md-6">
                                 <label>@lang('labels.category')</label>

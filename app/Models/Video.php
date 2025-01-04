@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Likeable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Hekmatinasser\Verta\Verta;
+use Illuminate\Support\Facades\Storage;
+
 class Video extends Model
 {
     /** @use HasFactory<\Database\Factories\VideoFactory> */
-    use HasFactory;
+    use HasFactory, Likeable;
 
     protected $fillable = [
-        'name', 'slug', 'description', 'url', 'thumbnail', 'length', 'category_id', 'user_id',
+        'name', 'slug', 'description', 'file', 'thumbnail', 'length', 'category_id', 'user_id',
     ];
 
     protected $perPage = 4;
@@ -66,5 +69,19 @@ class Video extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
+    }
+
+    public function getVideoUrlAttribute()
+    {
+        return '/storage/' . $this->file;
+    }
+
+    public function getVideoThumbnailAttribute()
+    {
+        if (str_starts_with($this->thumbnail, 'http')) {
+            return $this->thumbnail;
+        } else {
+            return '/storage/thumbnails/' . $this->thumbnail;
+        }
     }
 }

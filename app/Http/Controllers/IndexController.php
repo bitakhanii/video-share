@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Like;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -21,7 +22,6 @@ class IndexController extends Controller
 
     public function test()
     {
-        $user = Video::with(['user', 'category'])->inRandomOrder()->limit(6)->get();
-        dd($user);
+        Like::factory(200)->create();
     }
 }

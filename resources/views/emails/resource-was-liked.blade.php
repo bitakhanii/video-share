@@ -1,0 +1,1 @@
+Your {{ $likeable }} was liked!
