@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Filters\VideoFilters;
 use App\Models\Traits\Likeable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Hekmatinasser\Verta\Verta;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class Video extends Model
@@ -84,4 +87,10 @@ class Video extends Model
             return '/storage/thumbnails/' . $this->thumbnail;
         }
     }
+
+    public function scopeFilter(Builder $builder, array $params)
+    {
+        return (new VideoFilters($builder))->apply($params);
+    }
+
 }
