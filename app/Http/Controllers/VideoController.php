@@ -12,6 +12,7 @@ use App\Services\VideoService;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\Format\Video\X264;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller implements HasMiddleware
 {
+
     public static function middleware()
     {
         return [
@@ -41,12 +43,16 @@ class VideoController extends Controller implements HasMiddleware
 
     public function show(Request $request, Video $video)
     {
+       // Gate::authorize('view', $video);
+
         $video->load(['comments.user']);
         return view('videos.show', compact('video'));
     }
 
     public function edit(Video $video)
     {
+        Gate::authorize('update', $video);
+
         $categories = Category::all();
         return view('videos.edit', compact('video', 'categories'));
     }

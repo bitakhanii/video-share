@@ -8,11 +8,15 @@ use App\Listeners\ProcessVideo;
 use App\Listeners\SendEmail;
 use App\Models\Comment;
 use App\Models\Like;
+use App\Models\User;
 use App\Models\Video;
 use App\Observers\LikeObserver;
 use App\Observers\VideoObserver;
+use App\Policies\VideoPolicy;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use function Psy\bin;
@@ -56,5 +60,11 @@ class AppServiceProvider extends ServiceProvider
 
         Like::observe(LikeObserver::class);
         Video::observe(VideoObserver::class);
+
+        Gate::policy(Video::class, VideoPolicy::class);
+
+        /*Gate::define('edit-video', function (User $user, Video $video) {
+            return $user->id == $video->user_id;
+        });*/
     }
 }

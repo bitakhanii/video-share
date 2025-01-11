@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Comment;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCommentRequest extends FormRequest
@@ -11,7 +12,8 @@ class StoreCommentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        //return $this->video->user_id !== $this->user()->id;
+        return  $this->user()->can('create', [Comment::class, $this->video]);
     }
 
     /**
