@@ -127,6 +127,10 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'custom_log' => [
+            'path' => storage_path('logs/custom.log'),
+        ]
+
     ],
 
 ];

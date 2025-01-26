@@ -12,7 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function () {
-            //
+            Route::middleware('web')
+                ->group(base_path('routes/test.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
@@ -24,5 +25,14 @@ return Application::configure(basePath: dirname(__DIR__))
         });
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->reportable(function (\App\Exceptions\InvalidTypeException $e) {
+            //abort(404);
+        });
+
+        $exceptions->renderable(function (\App\Exceptions\InvalidTypeException $e) {
+            return response()->view('welcome');
+        });
+        $exceptions->reportable(function (Throwable $e) {
+            return false;
+        });
     })->create();
