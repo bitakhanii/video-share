@@ -8,19 +8,24 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Hekmatinasser\Verta\Verta;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class Video extends Model
 {
     /** @use HasFactory<\Database\Factories\VideoFactory> */
-    use HasFactory, Likeable;
+    use HasFactory, Likeable, SoftDeletes;
 
     protected $fillable = [
         'name', 'slug', 'description', 'file', 'thumbnail', 'length', 'category_id', 'user_id',
     ];
 
     protected $perPage = 4;
+
+    //protected $hidden = ['category_id', 'user_id'];
+    // protected $visible = ['name', 'slug'];
+    //protected $appends = ['owner_name'];
 
     public function getRouteKeyName()
     {
