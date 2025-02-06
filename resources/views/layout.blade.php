@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Video Post – Video Sharing HTML Template</title>
+    <title>@yield('title', 'Video Post – Video Sharing HTML Template')</title>
     <meta name="keywords" content="Blog website templates"/>
     <meta name="description" content="Author - Personal Blog Wordpress Template">
     <meta name="author" content="Rabie Elkheir">

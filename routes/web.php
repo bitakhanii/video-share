@@ -7,11 +7,8 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\CommentController;
-use App\Http\Middleware\VerifyEmail;
-use App\Mail\VerifyEmail as VerifyEmailMail;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Mail;
-use FFMpeg\FFMpeg;
 
 Route::get('/', [IndexController::class, 'index'])->name('index');
 Route::get('videos/create', [VideoController::class, 'create'])->name('videos.create');
@@ -33,6 +30,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('{likeable_type}/{likeable_id}/like', [LikeController::class, 'store'])->name('likes.store');
     Route::get('{likeable_type}/{likeable_id}/dislike', [DislikeController::class, 'store'])->name('dislikes.store');
+    Route::get('notification/email', [NotificationController::class, 'email'])->name('notification.email');
+    Route::post('notification/email', [NotificationController::class, 'sendEmail'])->name('notification.email.send');
+    Route::get('notification/sms', [NotificationController::class, 'sms'])->name('notification.sms');
+    Route::post('notification/sms', [NotificationController::class, 'sendSms'])->name('notification.sms.send');
 });
 
 require __DIR__ . '/auth.php';

@@ -25,7 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->reportable(function (\App\Exceptions\InvalidTypeException $e) {
+        /*$exceptions->reportable(function (\App\Exceptions\InvalidTypeException $e) {
             //abort(404);
         });
 
@@ -34,5 +34,5 @@ return Application::configure(basePath: dirname(__DIR__))
         });
         $exceptions->reportable(function (Throwable $e) {
             return false;
-        });
+        });*/
     })->create();

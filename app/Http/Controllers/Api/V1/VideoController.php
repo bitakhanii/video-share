@@ -43,7 +43,7 @@ class VideoController extends Controller
     {
         Gate::authorize('delete', $video);
 
-        $video->delete();
+        $video->forceDelete();
         return response()->json('ویدئو با موفقیت حذف گردید.');
     }
 }

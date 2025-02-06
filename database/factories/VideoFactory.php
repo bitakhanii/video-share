@@ -20,7 +20,7 @@ class VideoFactory extends Factory
     {
         return [
             'name' => fake()->realText(30),
-            'url' => 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+            'file' => 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
             'thumbnail' => 'https://picsum.photos/320/240?random=' . rand(1, 120),
             'length' => fake()->numberBetween('5', '20000'),
             'slug' => fake()->slug(),

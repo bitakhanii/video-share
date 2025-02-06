@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         //User::factory(10)->create();
 
-       Video::factory(20)->hasComments(3)->hasLikes(5)->create();
+       //Video::factory(20)->hasComments(3)->hasLikes(5)->create();
         //Category::factory(2)->create();
         /*User::factory()->create([
             'name' => 'Test User',

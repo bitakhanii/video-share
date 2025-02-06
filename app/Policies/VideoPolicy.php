@@ -45,7 +45,7 @@ class VideoPolicy
      */
     public function delete(User $user, Video $video): bool
     {
-        return false;
+        return true;
     }
 
     /**
