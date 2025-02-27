@@ -8,8 +8,11 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\TwoFactorAuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\MagicLoginController;
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -35,6 +38,27 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+
+    Route::get('redirect/{provider}', [SocialController::class, 'redirect'])
+        ->name('provider.redirect');
+
+    Route::get('{provider}/callback', [SocialController::class, 'callback'])
+        ->name('provider.callback');
+
+    Route::get('login/magic', [MagicLoginController::class, 'create'])
+        ->name('login.magic.create');
+
+    Route::post('login/magic', [MagicLoginController::class, 'store'])
+        ->name('login.magic.store');
+
+    Route::get('login/magic/{token}', [MagicLoginController::class, 'login'])
+        ->name('login.magic.login');
+
+    Route::get('login/two-factor-auth', [TwoFactorAuthController::class, 'loginForm'])
+        ->name('login.two-factor-auth.form');
+
+    Route::post('login/two-factor-auth', [TwoFactorAuthController::class, 'login'])
+        ->name('login.two-factor-auth');
 });
 
 Route::middleware('auth')->group(function () {
@@ -54,8 +78,31 @@ Route::middleware('auth')->group(function () {
 
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
 
-    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+    Route::put('password', [PasswordController::class, 'update'])
+        ->name('password.update');
 
     Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::prefix('two-factor-auth')->name('two-factor-auth.')->group(function () {
+       Route::get('/', [TwoFactorAuthController::class, 'index'])
+           ->name('index');
+
+       Route::get('/send-code', [TwoFactorAuthController::class, 'sendCode'])
+           ->name('send-code');
+
+        Route::get('/enter-code', [TwoFactorAuthController::class, 'enterCode'])
+            ->name('enter-code');
+
+        Route::post('/activate', [TwoFactorAuthController::class, 'activate'])
+            ->name('activate');
+
+       Route::post('deactivate', [TwoFactorAuthController::class, 'deactivate'])
+           ->name('deactivate');
+    });
+});
+
+Route::middleware('web')->group(function () {
+    Route::get('two-factor-auth/resent', [TwoFactorAuthController::class, 'resent'])
+        ->name('two-factor-auth.resent');
 });

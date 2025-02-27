@@ -14,7 +14,7 @@
                 <input type="hidden" name="token" value="{{ $request->route('token') }}">
                 <div class="form-group label-floating">
                     <label class="control-label">ایمیل</label>
-                    <input name="email" class="form-control" placeholder="" value={{ $request->email }} type="email">
+                    <input name="email" class="form-control" readonly value={{ $request->email }} type="email">
                 </div>
                 <div class="form-group label-floating">
                     <label class="control-label">رمز عبور</label>

@@ -4,9 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\TwoFactorAuthRequest;
+use App\Services\TwoFactorAuth\TwoFactorAuthentication;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -22,9 +27,20 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request, TwoFactorAuthentication $auth): RedirectResponse
     {
-        $request->authenticate();
+        $user = $request->authenticate($auth);
+
+        session([
+            'remember' => $request->remember,
+        ]);
+
+        if ($user->hasTwoFactorAuth()) {
+            $auth->requestCode($user);
+            return $this->sendTwoFactorAuthResponse();
+        }
+
+        Auth::login($user, $request->remember);
 
         $request->session()->regenerate();
 
@@ -43,5 +59,10 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    protected function sendTwoFactorAuthResponse()
+    {
+        return redirect()->route('login.two-factor-auth.form');
     }
 }

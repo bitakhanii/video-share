@@ -220,5 +220,8 @@ return [
         'file'                     => 'فایل',
         'email_type'               => 'نوع ایمیل',
         'user'                     => 'کاربر',
+        'phone_number'             => 'شماره همراه',
+        'g-recaptcha-response'     => 'من ربات نیستم',
+        'code'                     => 'کد',
     ],
 ];

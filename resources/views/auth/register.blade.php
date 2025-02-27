@@ -9,6 +9,7 @@
         </div>
 
         <div class="form-output">
+            <x-alerts></x-alerts>
             <x-validation-errors></x-validation-errors>
             <form method="POST" action="{{ route('register.store') }}">
                 @csrf
@@ -19,6 +20,10 @@
                 <div class="form-group label-floating">
                     <label class="control-label">@lang('labels.email')</label>
                     <input class="form-control" name="email" type="email">
+                </div>
+                <div class="form-group label-floating">
+                    <label class="control-label">@lang('labels.phone_number')</label>
+                    <input class="form-control" name="phone_number" type="text">
                 </div>
                 <div class="form-group label-floating">
                     <label class="control-label">@lang('labels.password')</label>

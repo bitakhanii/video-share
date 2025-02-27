@@ -6,13 +6,13 @@ use App\Events\VideoCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class SendEmail implements ShouldQueue
+class SendEmail
 {
     /**
      * Create the event listener.
      */
 
-    public $queue = 'send';
+    //public $queue = 'send';
 
     public function __construct()
     {
@@ -24,7 +24,7 @@ class SendEmail implements ShouldQueue
      */
     public function handle(VideoCreated $event): void
     {
-        dd($event->video->name);
-        //dump('This is send email listener.');
+        //dd($event->video->name);
+        dump('This is send email listener.');
     }
 }

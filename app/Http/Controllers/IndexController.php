@@ -24,10 +24,6 @@ class IndexController extends Controller
 
     public function test()
     {
-        $result = Gate::allows('test');
-
-        if (!$result) {
-            abort(403);
-        }
+        //
     }
 }

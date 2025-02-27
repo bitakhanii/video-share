@@ -20,8 +20,8 @@
         rel="stylesheet">
     <!-- Main CSS -->
     <!-- Responsive CSS -->
-    <script
 
+    @yield('links', '')
     @vite(['resources/css/main.css', 'resources/js/main.js'])
 
     {{--    <link rel="stylesheet" href="{{ asset('css/main.css') }}">--}}
@@ -38,7 +38,7 @@
 <body class="@yield('body-class')">
 
 @if(session('alert'))
-    <div class="alert alert-success">{{ session('alert') }}</div>
+    <div class="alert alert-{{ session('alert-type') }}">{{ session('alert') }}</div>
 @endif
 
 @yield('content')

@@ -25,6 +25,7 @@ class Notification
         if (! is_subclass_of($providerInstance, Provider::class)) {
             throw new Exception("The class must implements " . Provider::class);
         }
+
         return $providerInstance->send();
     }
 }

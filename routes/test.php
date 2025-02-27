@@ -35,6 +35,7 @@ Route::get('/queue', function () {
 });
 Route::get('event', function () {
     $video = Video::first();
+    //return event(new \App\Listeners\SendEmail());
     VideoCreated::dispatch($video);
 });
 Route::get('notify', function () {
@@ -86,3 +87,12 @@ Route::get('send-tel', function () {
     $notification = resolve(Notification::class);
     $notification->sendTel(User::query()->find(11), 'Telegram Test');
 });
+
+Route::get('temporary-route', function () {
+    $url = URL::temporarySignedRoute('bit', now()->addSeconds(15), ['age' => 18]);
+    dd($url);
+});
+
+Route::get('bita', function () {
+    dd('bita');
+})->name('bit')->middleware('verify-email');

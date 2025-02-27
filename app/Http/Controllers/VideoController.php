@@ -38,12 +38,15 @@ class VideoController extends Controller implements HasMiddleware
     public function store(StoreVideoRequest $request)
     {
         (new VideoService)->store($request->user(), $request->all());
-        return redirect()->route('index')->with(['alert' => __('alerts.success.create', ['attribute' => 'ویدئو']), 'alert-type' => 'success']);
+        return redirect()->route('index')->with([
+            'alert' => __('alerts.success.create', ['attribute' => 'ویدئو']),
+            'alert-type' => 'success',
+        ]);
     }
 
     public function show(Request $request, Video $video)
     {
-       // Gate::authorize('view', $video);
+        // Gate::authorize('view', $video);
 
         $video->load(['comments.user']);
         return view('videos.show', compact('video'));
@@ -80,7 +83,7 @@ class VideoController extends Controller implements HasMiddleware
 
         if ($duration > 40) {
             $video->filters()->clip(TimeCode::fromSeconds(0), TimeCode::fromSeconds(40))->synchronize();
-            $video->save(new X264(), storage_path('app/public/test/'. '1.mp4'));
+            $video->save(new X264(), storage_path('app/public/test/' . '1.mp4'));
             unlink($videoPath);
         }
     }

@@ -6,11 +6,9 @@ use App\Jobs\SendEmail;
 use App\Jobs\SendSms;
 use App\Models\User;
 use App\Services\Notification\Constants\EmailTypes;
-use App\Services\Notification\Exceptions\UserDoesNotHavePhoneNumber;
 use App\Services\Notification\Notification;
 use Exception;
 use Illuminate\Http\Request;
-use PhpParser\Node\Scalar\String_;
 use Throwable;
 
 class NotificationController extends Controller

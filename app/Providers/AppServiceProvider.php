@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Events\UserRegistered;
 use App\Events\VideoCreated;
 use App\Listeners\CreateThumbnail;
 use App\Listeners\ProcessVideo;
 use App\Listeners\SendEmail;
+use App\Listeners\SendVerificationEmail;
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\User;
@@ -50,6 +52,11 @@ class AppServiceProvider extends ServiceProvider
         Event::listen (
             VideoCreated::class,
             ProcessVideo::class,
+        );
+
+        Event::listen(
+            UserRegistered::class,
+            SendVerificationEmail::class,
         );
 
         Route::bind('likeable_id', function ($value, $route) {

@@ -79,6 +79,7 @@
                             <li><a href="#"><i class="fa fa-edit color-1"></i>ویرایش پروفایل</a></li>
                             <li><a href="#"><i class="fa fa-video-camera color-2"></i>اضافه کردن فیلم</a></li>
                             <li><a href="#"><i class="fa fa-star color-3"></i>برگزیده</a></li>
+                            <li><a href="{{ route('two-factor-auth.index') }}"><i class="fa fa-star color-3"></i>احراز هویت درمرحله‌ای</a></li>
                             <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out color-4"></i>خروج</a></li>
                         </ul>
                     </div>
@@ -95,6 +96,8 @@
 </header><!-- // header -->
 
 <x-header-menu></x-header-menu>
+
+<x-validation-errors></x-validation-errors>
 
 <div class="site-output">
     @if(session('alert'))

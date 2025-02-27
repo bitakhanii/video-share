@@ -4,13 +4,9 @@
 
 
 @section('content')
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
 
-    @if(session('failed'))
-        <div class="alert alert-danger">{{ session('failed') }}</div>
-    @endif
+    <x-alerts></x-alerts>
+
     <div class="row justify-content-md-center">
         <div class="col-md-8">
             <div class="card">

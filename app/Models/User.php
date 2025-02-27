@@ -3,16 +3,20 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Services\MagicLogin\Traits\MagicallyAuthenticable;
+use App\Services\TwoFA\Traits\HasTwoFA;
+use App\Services\TwoFactorAuth\Traits\HasTwoFactorAuth;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, MagicallyAuthenticable, HasTwoFactorAuth;
 
     /**
      * The attributes that are mass assignable.
@@ -20,9 +24,14 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
+        'provider',
         'name',
         'email',
+        'provider_id',
+        'avatar',
         'password',
+        'phone_number',
+        'has_2fa',
     ];
 
     /**
