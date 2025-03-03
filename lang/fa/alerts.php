@@ -8,6 +8,7 @@ return [
         'verify' => ':attribute شما با موفقیت تأیید شد.',
         'activate' => ':attribute با موفقیت فعال گردید.',
         'deactivate' => ':attribute با موفقیت غیرفعال گردید.',
+        'saves' => ':attribute با موفقیت ذخیره شدند.',
         'welcome' => 'خوش آمدید.',
     ],
     'danger' => [

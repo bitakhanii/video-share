@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Like;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -24,6 +25,8 @@ class IndexController extends Controller
 
     public function test()
     {
-        //
+        Role::find(1)->givePermissions('create-video');
+        auth()->user()->giveRoles('admin');
+        dd(auth()->user()->can('create-video'));
     }
 }

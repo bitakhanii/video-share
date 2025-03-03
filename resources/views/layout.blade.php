@@ -54,7 +54,8 @@
             <div class="col-lg-3 col-md-3 col-sm-6 hidden-xs hidden-sm">
                 <div class="search-form">
                     <form id="search" action="#" method="get">
-                        <input type="text" name="q" value="{{ request()->query('q') }}" style="text-align: right;" placeholder="جستجو ..."/>
+                        <input type="text" name="q" value="{{ request()->query('q') }}" style="text-align: right;"
+                               placeholder="جستجو ..."/>
                         <input type="submit" value="Keywords"/>
                     </form>
                 </div>
@@ -79,8 +80,16 @@
                             <li><a href="#"><i class="fa fa-edit color-1"></i>ویرایش پروفایل</a></li>
                             <li><a href="#"><i class="fa fa-video-camera color-2"></i>اضافه کردن فیلم</a></li>
                             <li><a href="#"><i class="fa fa-star color-3"></i>برگزیده</a></li>
-                            <li><a href="{{ route('two-factor-auth.index') }}"><i class="fa fa-star color-3"></i>احراز هویت درمرحله‌ای</a></li>
-                            <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out color-4"></i>خروج</a></li>
+                            <li><a href="{{ route('two-factor-auth.index') }}"><i class="fa fa-star color-3"></i>احراز
+                                    هویت درمرحله‌ای</a></li>
+                            @can('show-panel')
+                                <!--@role('admin')-->
+                                <li><a href="{{ route('users.index') }}"><i class="fa fa-tachometer color-4"></i>پنل
+                                        مدیریت</a>
+                                </li>
+                                <!--@endrole-->
+                            @endcan
+                                <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out color-4"></i>خروج</a></li>
                         </ul>
                     </div>
                 </div>
@@ -97,7 +106,9 @@
 
 <x-header-menu></x-header-menu>
 
-<x-validation-errors></x-validation-errors>
+@if(!request()->routeIs('roles.index', 'roles.edit'))
+    <x-validation-errors></x-validation-errors>
+@endif
 
 <div class="site-output">
     @if(session('alert'))

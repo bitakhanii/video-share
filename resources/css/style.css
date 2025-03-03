@@ -1960,6 +1960,10 @@ h1.new-video-title .fa {
     color: #fab318;
 }
 
+#panel-table {
+    margin-top: 30px;
+}
+
 #upload {
     margin-top: 30px;
     margin-bottom: 30px;
