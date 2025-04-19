@@ -4,6 +4,7 @@ namespace App\Support\Payment\Gateways;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use SoapClient;
 
 class Saman implements GatewayInterface
 {
@@ -27,14 +28,19 @@ class Saman implements GatewayInterface
             return $this->transactionFailed();
         }*/
 
-        $soapClient = new SoapClient('https://acquirer.samanepay.com/payments/referencepayment.asmx?WSDL');
+        $soapClient = new \SoapClient('https://acquirer.samanepay.com/payments/referencepayment.asmx?WSDL');
         $response = $soapClient->verifyTransaction($request->RefNum, $this->merchantID);
-
-        dd($response);
 
         $order = $this->getOrder($request);
 
-        $this->transactionSuccess($order, $request->RefNum);
+        $response = $order->amount;
+        $request->merge(['RefNum' => '12345678']);
+
+        return $response == $order->amount
+            ? $this->transactionSuccess($order, $request->RefNum)
+            : $this->transactionFailed();
+
+
     }
 
     public function getName(): string
@@ -66,6 +72,7 @@ class Saman implements GatewayInterface
             'status' => self::TRANSACTION_SUCCESS,
             'order' => $order,
             'refNum' => $refNum,
+            'gateway' => $this->getName(),
         ];
     }
 

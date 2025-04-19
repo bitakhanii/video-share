@@ -28,6 +28,9 @@ class PaymentController extends Controller
 
     private function sendSuccessResponse()
     {
-        return redirect()->route('index')->with('alert', __('alerts.success.pay', ['attribute' => 'سفارش شما']));
+        return redirect()->route('index')->with([
+            'alert' => __('alerts.success.pay', ['attribute' => 'سفارش شما']),
+            'alert-type' => 'success',
+        ]);
     }
 }

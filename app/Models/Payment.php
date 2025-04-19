@@ -23,4 +23,12 @@ class Payment extends Model
     {
         return $this->hasOne(Order::class);
     }
+
+    public function confirm(string $refNum, string $gateway = null)
+    {
+            $this->gateway = $gateway;
+            $this->ref_num = $refNum;
+            $this->status = 1;
+            $this->save();
+    }
 }
