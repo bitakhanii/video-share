@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CategoryVideoController;
 use App\Http\Controllers\DislikeController;
 use App\Http\Controllers\IndexController;
@@ -8,6 +9,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -60,5 +63,31 @@ Route::prefix('panel')->middleware('role:admin')->group(function () {
     Route::post('roles/{role}', [RoleController::class, 'update'])
         ->name('roles.update');
 });
+
+Route::prefix('products')->group(function () {
+    Route::get('/', [ProductController::class, 'index'])
+        ->name('products.index');
+});
+
+Route::get('basket/add/{product}', [BasketController::class, 'addToBasket'])
+    ->name('basket.add');
+
+Route::get('basket', [BasketController::class, 'index'])
+    ->name('basket.index');
+
+Route::post('basket/update/{product}' , [BasketController::class, 'updateQuantity'])
+    ->name('basket.update');
+
+Route::get('basket/delete/{product}', [BasketController::class, 'delete'])
+    ->name('basket.delete');
+
+Route::middleware('auth')->get('basket/checkout', [BasketController::class, 'checkoutForm'])
+    ->name('basket.checkout.form');
+
+Route::middleware('auth')->post('basket/checkout', [BasketController::class, 'checkout'])
+    ->name('basket.checkout');
+
+Route::post('payment/{gateway}/verify', [PaymentController::class, 'verify'])
+->name('payment.verify');
 
 require __DIR__ . '/auth.php';

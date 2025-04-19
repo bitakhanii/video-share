@@ -60,10 +60,14 @@
                     </form>
                 </div>
             </div><!-- // col-md-3 -->
-            <div class="col-lg-3 col-md-3 col-sm-5 hidden-xs hidden-sm">
+            <div class="col-lg-4 col-md-3 col-sm-5 hidden-xs hidden-sm">
             </div><!-- // col-md-4 -->
-            <div class="col-lg-2 col-md-2 col-sm-4 hidden-xs hidden-sm">
-                <!--  -->
+            @inject('basket', 'App\Support\Basket\Basket')
+            <div class="col-lg-1 col-md-2 col-sm-4 hidden-xs hidden-sm">
+                <a href="{{ route('basket.index') }}" class="btn btn-info">
+                    سبد خرید
+                    <span class="btn btn-sm btn-primary">{{ $basket->itemCount() }}</span>
+                </a>
             </div>
             @auth
                 <div class="col-lg-2 col-md-2 col-sm-3 hidden-xs hidden-sm">
@@ -114,7 +118,7 @@
     @if(session('alert'))
         <div class="alert alert-{{ session('alert-type') }}">{{ session('alert') }}</div>
     @endif
-    <div id="all-output" class="col-md-12">
+    <div id="all-output" class="col-md-12" style="margin-top: 30px !important;">
         @yield('content')
     </div>
 </div>

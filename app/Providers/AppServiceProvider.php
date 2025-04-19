@@ -15,6 +15,8 @@ use App\Models\Video;
 use App\Observers\LikeObserver;
 use App\Observers\VideoObserver;
 use App\Policies\VideoPolicy;
+use App\Support\Storage\Contracts\StorageInterface;
+use App\Support\Storage\SessionStorage;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
@@ -73,5 +75,9 @@ class AppServiceProvider extends ServiceProvider
         /*Gate::define('edit-video', function (User $user, Video $video) {
             return $user->id == $video->user_id;
         });*/
+
+        $this->app->bind(StorageInterface::class, function ($app) {
+            return new SessionStorage('cart');
+        });
     }
 }

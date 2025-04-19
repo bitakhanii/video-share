@@ -24,6 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 return route('login.create'); // نام جدید روت لاگین
             }
         });
+        $middleware->validateCsrfTokens(except: [
+            'payment/saman/verify',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         /*$exceptions->reportable(function (\App\Exceptions\InvalidTypeException $e) {

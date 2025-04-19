@@ -52,6 +52,10 @@ img {
     max-width: 100%;
 }
 
+th {
+    text-align: right;
+}
+
 a, a:active, a:focus, a:hover {
     outline: none;
     text-decoration: none;

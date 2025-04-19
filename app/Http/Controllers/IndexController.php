@@ -8,6 +8,7 @@ use App\Models\Like;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Video;
+use App\Support\Storage\Contracts\StorageInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -25,8 +26,15 @@ class IndexController extends Controller
 
     public function test()
     {
-        Role::find(1)->givePermissions('create-video');
-        auth()->user()->giveRoles('admin');
-        dd(auth()->user()->can('create-video'));
+        $sessionStorage = resolve(StorageInterface::class);
+
+        $sessionStorage->set('product', '4');
+        $sessionStorage->set('item', '7');
+        $sessionStorage->set('video', '1');
+        //$sessionStorage->unset('product');
+        //$sessionStorage->unset('item');
+        $sessionStorage->clear();
+
+        dd(session()->all());
     }
 }
