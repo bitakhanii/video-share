@@ -26,6 +26,6 @@ class IndexController extends Controller
 
     public function test()
     {
-        dd('Hello From Laptop');
+        dd('Hello From Computer');
     }
 }
