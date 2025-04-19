@@ -26,15 +26,6 @@ class IndexController extends Controller
 
     public function test()
     {
-        $sessionStorage = resolve(StorageInterface::class);
-
-        $sessionStorage->set('product', '4');
-        $sessionStorage->set('item', '7');
-        $sessionStorage->set('video', '1');
-        //$sessionStorage->unset('product');
-        //$sessionStorage->unset('item');
-        $sessionStorage->clear();
-
-        dd(session()->all());
+        dd('Hello From Laptop');
     }
 }
