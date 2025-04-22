@@ -22,30 +22,30 @@ class Saman implements GatewayInterface
         $this->redirectToBank($order);
     }
 
+    public function getName(): string
+    {
+        return 'saman';
+    }
+
     public function verify(Request $request)
     {
-        /*if (!$request->has('State') || $request->input('State') !== 'OK') {
+        /*if (!$request->has('State') || $request->State != 'OK') {
             return $this->transactionFailed();
         }*/
 
-        $soapClient = new \SoapClient('https://acquirer.samanepay.com/payments/referencepayment.asmx?WSDL');
-        $response = $soapClient->verifyTransaction($request->RefNum, $this->merchantID);
+        $soapClient = new SoapClient('https://acquirer.samanepay.com/payments/referencepayment.asmx?WSDL');
+        $response = $soapClient->VerifyTransaction($request->RefNum, $request->MID);
 
-        $order = $this->getOrder($request);
+        $order = $this->getOrder($request->ResNum);
 
+        // start -> for success test
         $response = $order->amount;
-        $request->merge(['RefNum' => '12345678']);
+        $request->merge(['RefNum' => '12341234']);
+        // end -> for success test
 
         return $response == $order->amount
             ? $this->transactionSuccess($order, $request->RefNum)
             : $this->transactionFailed();
-
-
-    }
-
-    public function getName(): string
-    {
-        return 'saman';
     }
 
     private function redirectToBank($order)
@@ -76,8 +76,8 @@ class Saman implements GatewayInterface
         ];
     }
 
-    private function getOrder($request)
+    private function getOrder($resNum)
     {
-        return Order::query()->where('code', '=', $request->ResNum)->firstOrFail();
+        return Order::query()->where('code', $resNum)->first();
     }
 }

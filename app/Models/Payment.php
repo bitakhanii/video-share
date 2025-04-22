@@ -21,14 +21,14 @@ class Payment extends Model
 
     public function order()
     {
-        return $this->hasOne(Order::class);
+        return $this->belongsTo(Order::class);
     }
 
     public function confirm(string $refNum, string $gateway = null)
     {
-            $this->gateway = $gateway;
-            $this->ref_num = $refNum;
-            $this->status = 1;
-            $this->save();
+        $this->ref_num = $refNum;
+        $this->gateway = $gateway;
+        $this->status = 1;
+        $this->save();
     }
 }
