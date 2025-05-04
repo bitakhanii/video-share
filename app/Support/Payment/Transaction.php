@@ -6,6 +6,7 @@ use App\Events\OrderRegistered;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Support\Basket\Basket;
+use App\Support\Cost\Contracts\CostInterface;
 use App\Support\Payment\Gateways\GatewayInterface;
 use App\Support\Payment\Gateways\Pasargad;
 use App\Support\Payment\Gateways\Saman;
@@ -18,11 +19,13 @@ class Transaction
 
     private $requset;
     private $basket;
+    private $cost;
 
-    public function __construct(Request $request, Basket $basket)
+    public function __construct(Request $request, Basket $basket, CostInterface $cost)
     {
         $this->requset = $request;
         $this->basket = $basket;
+        $this->cost = $cost;
     }
 
     public function checkout()
@@ -45,7 +48,7 @@ class Transaction
         }
 
         if ($payment->isOnline()) {
-            return $this->gatewayFactory()->pay($order);
+            return $this->gatewayFactory()->pay($order, $this->cost->getTotalCosts());
         }
 
         $this->completeOrder($order);
@@ -70,7 +73,7 @@ class Transaction
     {
         $order = Order::create([
             'user_id' => auth()->user()->id,
-            'amount' => $this->basket->subTotal() + 50000,
+            'amount' => $this->basket->subTotal(),
             'code' => bin2hex(Str::random(16)),
         ]);
 
@@ -85,7 +88,7 @@ class Transaction
             'order_id' => $order->id,
             'method' => $this->requset->method,
             'gateway' => $this->requset->gateway,
-            'amount' => $order->amount,
+            'amount' => $this->cost->getTotalCosts(),
         ]);
     }
 
@@ -120,6 +123,8 @@ class Transaction
         $this->normalizeQuantity($order);
 
         event(new OrderRegistered($order));
+
+        session()->forget('coupon');
 
         $this->basket->clear();
     }

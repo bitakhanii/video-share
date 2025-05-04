@@ -26,7 +26,7 @@
                             @foreach($products as $product)
                                 <tr>
                                     <td>{{ $product->title }}</td>
-                                    <td>{{ number_format($product->price) }}</td>
+                                    <td>{{ number_format($product->discountedPrice) }}</td>
                                     <td>
                                         <form action="{{ route('basket.update', $product) }}" method="POST"
                                               class="form-inline">

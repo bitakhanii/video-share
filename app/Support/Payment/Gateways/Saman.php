@@ -17,9 +17,9 @@ class Saman implements GatewayInterface
         $this->callback = route('payment.verify', $this->getName());
     }
 
-    public function pay(Order $order)
+    public function pay(Order $order, $amount)
     {
-        $this->redirectToBank($order);
+        $this->redirectToBank($order, $amount);
     }
 
     public function getName(): string
@@ -39,19 +39,19 @@ class Saman implements GatewayInterface
         $order = $this->getOrder($request->ResNum);
 
         // start -> for success test
-        $response = $order->amount;
+        $response = $order->payment->amount;
         $request->merge(['RefNum' => '12341234']);
         // end -> for success test
 
-        return $response == $order->amount
+        return $response == $order->payment->amount
             ? $this->transactionSuccess($order, $request->RefNum)
             : $this->transactionFailed();
     }
 
-    private function redirectToBank($order)
+    private function redirectToBank($order, $amount)
     {
         echo "<form id='samanPayment' action='https://sep.shaparak.ir/payment.aspx' method='post'>
-    <input type='hidden' name='Amount' value='{$order->amount}' />
+    <input type='hidden' name='Amount' value='{$amount}' />
     <input type='hidden' name='ResNum' value='{$order->code}' />
     <input type='hidden' name='RedirectURL' value='{$this->callback}' />
     <input type='hidden' name='MID' value='{$this->merchantID}' />

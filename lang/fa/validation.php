@@ -224,5 +224,6 @@ return [
         'g-recaptcha-response'     => 'من ربات نیستم',
         'code'                     => 'کد',
         'persian_name'             => 'نام فارسی',
+        'coupon'                   => 'کد تخفیف',
     ],
 ];

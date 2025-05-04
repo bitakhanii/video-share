@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CategoryVideoController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DislikeController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\LikeController;
@@ -39,6 +40,8 @@ Route::middleware('auth')->group(function () {
     Route::post('notification/email', [NotificationController::class, 'sendEmail'])->name('notification.email.send');
     Route::get('notification/sms', [NotificationController::class, 'sms'])->name('notification.sms');
     Route::post('notification/sms', [NotificationController::class, 'sendSms'])->name('notification.sms.send');
+    Route::post('coupon/apply', [CouponController::class, 'apply'])->name('coupon.apply');
+    Route::get('coupon/remove', [CouponController::class, 'remove'])->name('coupon.remove');
 });
 
 Route::prefix('panel')->middleware('role:admin')->group(function () {

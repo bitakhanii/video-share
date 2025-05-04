@@ -9,12 +9,19 @@ use App\Listeners\ProcessVideo;
 use App\Listeners\SendEmail;
 use App\Listeners\SendVerificationEmail;
 use App\Models\Comment;
+use App\Support\Coupon\DiscountManager;
 use App\Models\Like;
 use App\Models\User;
 use App\Models\Video;
 use App\Observers\LikeObserver;
 use App\Observers\VideoObserver;
 use App\Policies\VideoPolicy;
+use App\Support\Basket\Basket;
+use App\Support\Cost\BasketCost;
+use App\Support\Cost\Contracts\CostInterface;
+use App\Support\Cost\DiscountCost;
+use App\Support\Cost\PackCost;
+use App\Support\Cost\ShippingCost;
 use App\Support\Storage\Contracts\StorageInterface;
 use App\Support\Storage\SessionStorage;
 use Illuminate\Auth\Access\Response;
@@ -78,6 +85,14 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(StorageInterface::class, function ($app) {
             return new SessionStorage('cart');
+        });
+
+        $this->app->bind(CostInterface::class, function ($app) {
+            $basketCost = new BasketCost($app->make(Basket::class));
+            $shippingCost = new ShippingCost($basketCost);
+            $packCost = new PackCost($shippingCost);
+            $discountCost = new DiscountCost($packCost, $app->make(DiscountManager::class), $basketCost);
+            return $discountCost;
         });
     }
 }

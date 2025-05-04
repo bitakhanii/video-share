@@ -59,7 +59,7 @@ class Basket
         $total = 0;
 
         foreach ($this->all() as $product) {
-            $total += $product->price * $product->quantity;
+            $total += $product->discountedPrice * $product->quantity;
         }
 
         return $total;

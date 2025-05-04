@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class Pasargad implements GatewayInterface
 {
 
-    public function pay(Order $order)
+    public function pay(Order $order, $amount)
     {
         dd('pasargad pay');
     }

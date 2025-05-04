@@ -7,6 +7,7 @@ use App\Services\MagicLogin\Traits\MagicallyAuthenticable;
 use App\Services\Permission\Traits\HasPermissions;
 use App\Services\Permission\Traits\HasRoles;
 use App\Services\TwoFactorAuth\Traits\HasTwoFactorAuth;
+use App\Support\Coupon\Traits\Couponable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -16,7 +17,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, MagicallyAuthenticable, HasTwoFactorAuth, HasPermissions, HasRoles;
+    use HasFactory, Notifiable, HasApiTokens, MagicallyAuthenticable, HasTwoFactorAuth, HasPermissions, HasRoles, Couponable;
 
     /**
      * The attributes that are mass assignable.

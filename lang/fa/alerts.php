@@ -9,6 +9,7 @@ return [
         'activate' => ':attribute با موفقیت فعال گردید.',
         'deactivate' => ':attribute با موفقیت غیرفعال گردید.',
         'saves' => ':attribute با موفقیت ذخیره شدند.',
+        'apply' => ':attribute باموفقیت اعمال شد.',
         'welcome' => 'خوش آمدید.',
         'register' => ':attribute با شناسه :id با موفقیت ثبت شد.',
         'pay' => ':attribute با موفقیت پرداخت شد.',
