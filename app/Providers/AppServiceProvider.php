@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Spatie\Browsershot\Browsershot;
 use function Psy\bin;
 
 class AppServiceProvider extends ServiceProvider

@@ -24,6 +24,10 @@ class SendOrderDetails implements ShouldQueue
      */
     public function handle(OrderRegistered $event): void
     {
-        Mail::to($event->order->user)->send(new OrderDetails($event->order));
+        try {
+            Mail::to($event->order->user)->send(new OrderDetails($event->order));
+        } catch (\Exception $exception) {
+            dd($exception->getMessage());
+        }
     }
 }

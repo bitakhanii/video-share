@@ -37,6 +37,7 @@ class Transaction
 
         try {
             $order = $this->makeOrder();
+            $order->generateInvoice();
             $payment = $this->makePayment($order);
 
             DB::commit();
@@ -63,10 +64,15 @@ class Transaction
             return false;
         }
 
-        $result['order']->payment->confirm($result['refNum'], $result['gateway']);
+        $result['orders']->payment->confirm($result['refNum'], $result['gateway']);
 
-        $this->completeOrder($result['order']);
+        $this->completeOrder($result['orders']);
         return true;
+    }
+
+    public function orderPay(Order $order)
+    {
+        return $this->gatewayFactory()->pay($order, $order->payment->amount);
     }
 
     private function makeOrder()
@@ -103,6 +109,7 @@ class Transaction
 
     private function gatewayFactory()
     {
+        if (!$this->requset->has('gateway')) return resolve(Saman::class);
         $gateway = [
             'saman' => Saman::class,
             'pasargad' => Pasargad::class,

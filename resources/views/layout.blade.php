@@ -82,6 +82,8 @@
                         </a>
                         <ul class="dropdown-menu account-menu">
                             <li><a href="#"><i class="fa fa-edit color-1"></i>ویرایش پروفایل</a></li>
+                            <li><a href="{{ route('orders.index') }}"><i class="fa fa-edit
+                            color-1"></i>سفارشات</a></li>
                             <li><a href="#"><i class="fa fa-video-camera color-2"></i>اضافه کردن فیلم</a></li>
                             <li><a href="#"><i class="fa fa-star color-3"></i>برگزیده</a></li>
                             <li><a href="{{ route('two-factor-auth.index') }}"><i class="fa fa-star color-3"></i>احراز

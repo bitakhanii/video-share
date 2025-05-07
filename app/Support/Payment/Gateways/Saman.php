@@ -70,7 +70,7 @@ class Saman implements GatewayInterface
     {
         return [
             'status' => self::TRANSACTION_SUCCESS,
-            'order' => $order,
+            'orders' => $order,
             'refNum' => $refNum,
             'gateway' => $this->getName(),
         ];

@@ -51,6 +51,8 @@ class OrderDetails extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        return [
+            $this->order->invoicePath(),
+        ];
     }
 }

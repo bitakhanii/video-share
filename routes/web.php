@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
@@ -42,6 +43,9 @@ Route::middleware('auth')->group(function () {
     Route::post('notification/sms', [NotificationController::class, 'sendSms'])->name('notification.sms.send');
     Route::post('coupon/apply', [CouponController::class, 'apply'])->name('coupon.apply');
     Route::get('coupon/remove', [CouponController::class, 'remove'])->name('coupon.remove');
+    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('orders/{order}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
+    Route::get('orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay');
 });
 
 Route::prefix('panel')->middleware('role:admin')->group(function () {
