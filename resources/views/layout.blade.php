@@ -10,6 +10,7 @@
     <meta name="author" content="Rabie Elkheir">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap Core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
     <!-- Owl Carousel Assets -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
           type="text/css"/>
@@ -18,6 +19,7 @@
     <link
         href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800|Raleway:400,500,700|Roboto:300,400,500,700,900|Ubuntu:300,300i,400,400i,500,500i,700"
         rel="stylesheet">
+
     <!-- Main CSS -->
     <!-- Responsive CSS -->
     <script
@@ -85,7 +87,10 @@
                             <li><a href="{{ route('orders.index') }}"><i class="fa fa-edit
                             color-1"></i>سفارشات</a></li>
                             <li><a href="#"><i class="fa fa-video-camera color-2"></i>اضافه کردن فیلم</a></li>
-                            <li><a href="#"><i class="fa fa-star color-3"></i>برگزیده</a></li>
+                            <li><a href="{{ route('file.create') }}"><i class="fa fa-video-camera color-2"></i>آپلود
+                                    فایل</a></li>
+                            <li><a href="{{ route('file.index') }}"><i class="fa fa-star
+                            color-3"></i>فایل‌ها</a></li>
                             <li><a href="{{ route('two-factor-auth.index') }}"><i class="fa fa-star color-3"></i>احراز
                                     هویت درمرحله‌ای</a></li>
                             @can('show-panel')

@@ -11,8 +11,8 @@ class FFmpegAdapter
     public function __construct(public string $path)
     {
         $ffmpeg = FFMpeg::create([
-            'ffmpeg.binaries' => 'C:/ffmpeg/bin/ffmpeg.exe',
-            'ffprobe.binaries' => 'C:/ffmpeg/bin/ffprobe.exe'
+            'ffmpeg.binaries' => env('FFMPEG_PATH'),
+            'ffprobe.binaries' => env('FFPROBE_PATH'),
         ]);
 
         $ffprobe = $ffmpeg->getFFProbe();

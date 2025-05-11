@@ -4,6 +4,7 @@ use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CategoryVideoController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DislikeController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ProfileController;
@@ -46,6 +47,11 @@ Route::middleware('auth')->group(function () {
     Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('orders/{order}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
     Route::get('orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay');
+    Route::get('files', [FileController::class, 'index'])->name('file.index');
+    Route::get('file/create', [FileController::class, 'create'])->name('file.create');
+    Route::post('file/new', [FileController::class, 'new'])->name('file.new');
+    Route::get('file/{file}', [FileController::class, 'download'])->name('file.download');
+    Route::get('file/{file}/delete', [FileController::class, 'delete'])->name('file.delete');
 });
 
 Route::prefix('panel')->middleware('role:admin')->group(function () {

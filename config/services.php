@@ -46,4 +46,9 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    'ffmpeg' => [
+      'ffmpeg_path' => env('FFMPEG_PATH'),
+      'ffprobe_path' => env('FFPROBE_PATH'),
+    ],
+
 ];
