@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Like;
@@ -26,6 +27,7 @@ class IndexController extends Controller
 
     public function test()
     {
-        dd('Hello From Computer');
+        $admin = new Admin();
+        $admin->test();
     }
 }

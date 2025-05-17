@@ -18,6 +18,5 @@ class VerifyEmail
         if (!auth()->user()->hasVerifiedEmail()) {
             return redirect()->route('index')->with(['alert' => __('alerts.danger.verify'), 'alert-type' => 'danger']);
         }
-        return redirect('/')->with('error', 'شما مجاز به دسترسی نیستید.');
     }
 }

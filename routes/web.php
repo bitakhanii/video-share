@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CategoryVideoController;
 use App\Http\Controllers\CouponController;
@@ -14,7 +15,9 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,7 +33,7 @@ Route::post('videos/{video}/comments', [CommentController::class, 'store'])->mid
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verify-email'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -102,5 +105,29 @@ Route::middleware('auth')->post('basket/checkout', [BasketController::class, 'ch
 
 Route::post('payment/{gateway}/verify', [PaymentController::class, 'verify'])
 ->name('payment.verify');
+
+Route::middleware(['guest:web', 'guest:admin'])->prefix('admin')->name('admin.')->group(function () {
+   Route::get('register', [AdminController::class, 'registerForm'])->name('register.form');
+   Route::post('register', [AdminController::class, 'register'])->name('register');
+   Route::get('login', [AdminController::class, 'loginForm'])->name('login.form');
+   Route::post('login', [AdminController::class, 'login'])->name('login');
+});
+
+Route::middleware('auth:web,admin')->prefix('tickets')->group(function () {
+    Route::get('/', [TicketController::class, 'index'])->name('tickets.index');
+    Route::get('/create', [TicketController::class, 'create'])->name('tickets.create');
+    Route::post('/', [TicketController::class, 'store'])->name('tickets.store');
+    Route::get('/{ticket:title}', [TicketController::class, 'show'])->name('tickets.show');
+    Route::post('{ticket}/reply', [ReplyController::class, 'store'])->name('reply.store');
+    Route::get('{ticket}/close', [TicketController::class, 'close'])->name('tickets.close');
+});
+
+Route::get('logout', function (){
+    auth()->logout();
+});
+
+Route::get('admin/logout', function (){
+    auth()->guard('admin')->logout();
+});
 
 require __DIR__ . '/auth.php';

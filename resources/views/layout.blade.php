@@ -93,13 +93,13 @@
                             color-3"></i>فایل‌ها</a></li>
                             <li><a href="{{ route('two-factor-auth.index') }}"><i class="fa fa-star color-3"></i>احراز
                                     هویت درمرحله‌ای</a></li>
-                            @can('show-panel')
-                                <!--@role('admin')-->
+                            {{--@can('show-panel')--}}
+                                {{--<!--@role('admin')-->--}}
                                 <li><a href="{{ route('users.index') }}"><i class="fa fa-tachometer color-4"></i>پنل
                                         مدیریت</a>
                                 </li>
-                                <!--@endrole-->
-                            @endcan
+                                {{--<!--@endrole-->--}}
+                            {{--@endcan--}}
                                 <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out color-4"></i>خروج</a></li>
                         </ul>
                     </div>

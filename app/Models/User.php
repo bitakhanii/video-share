@@ -78,4 +78,19 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Order::class);
     }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
+    public function replies()
+    {
+        return $this->morphMany(Reply::class, 'repliable');
+    }
+
+    public function isAdmin()
+    {
+        return $this instanceof Admin;
+    }
 }

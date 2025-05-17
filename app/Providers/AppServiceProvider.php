@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\TicketReplid;
 use App\Events\UserRegistered;
 use App\Events\VideoCreated;
+use App\Listeners\ChangeTicketStatus;
 use App\Listeners\CreateThumbnail;
 use App\Listeners\ProcessVideo;
 use App\Listeners\SendEmail;
@@ -67,6 +69,11 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(
             UserRegistered::class,
             SendVerificationEmail::class,
+        );
+
+        Event::listen(
+            TicketReplid::class,
+            ChangeTicketStatus::class,
         );
 
         Route::bind('likeable_id', function ($value, $route) {
