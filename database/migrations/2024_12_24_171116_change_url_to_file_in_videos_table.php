@@ -13,10 +13,6 @@ return new class extends Migration
     {
         Schema::table('videos', function (Blueprint $table) {
             $table->renameColumn('url', 'file');
-            $table->renameColumn('name', 'full_name');
-            $table->text('email')->change();
-            $table->integer('age')->after('name')->nullable();
-            $table->dropColumn('password');
         });
     }
 
@@ -27,10 +23,6 @@ return new class extends Migration
     {
         Schema::table('videos', function (Blueprint $table) {
             $table->renameColumn('file', 'url');
-            $table->renameColumn('full_name', 'name');
-            $table->string('email')->change();
-            $table->dropColumn('age');
-            $table->string('password')->after('email');
         });
     }
 };

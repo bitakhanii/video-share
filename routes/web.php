@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AparatController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CategoryVideoController;
 use App\Http\Controllers\CouponController;
@@ -120,6 +121,14 @@ Route::middleware('auth:web,admin')->prefix('tickets')->group(function () {
     Route::get('/{ticket:title}', [TicketController::class, 'show'])->name('tickets.show');
     Route::post('{ticket}/reply', [ReplyController::class, 'store'])->name('reply.store');
     Route::get('{ticket}/close', [TicketController::class, 'close'])->name('tickets.close');
+});
+
+Route::middleware('web')->prefix('aparat')->group(function () {
+   Route::get('/', [AparatController::class, 'index'])->name('aparat.index');
+   Route::get('login', [AparatController::class, 'login'])->name('aparat.login');
+   Route::post('upload', [AparatController::class, 'upload'])->name('aparat.upload');
+   Route::get('show', [AparatController::class, 'show'])->name('aparat.show');
+   Route::get('delete', [AparatController::class, 'delete'])->name('aparat.delete');
 });
 
 Route::get('logout', function (){
