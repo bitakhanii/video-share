@@ -10,6 +10,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Topic\BadgeController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
@@ -17,8 +18,10 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\Topic\ReplyController as TopicReplyController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\Topic\TopicController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -92,7 +95,7 @@ Route::get('basket/add/{product}', [BasketController::class, 'addToBasket'])
 Route::get('basket', [BasketController::class, 'index'])
     ->name('basket.index');
 
-Route::post('basket/update/{product}' , [BasketController::class, 'updateQuantity'])
+Route::post('basket/update/{product}', [BasketController::class, 'updateQuantity'])
     ->name('basket.update');
 
 Route::get('basket/delete/{product}', [BasketController::class, 'delete'])
@@ -105,13 +108,13 @@ Route::middleware('auth')->post('basket/checkout', [BasketController::class, 'ch
     ->name('basket.checkout');
 
 Route::post('payment/{gateway}/verify', [PaymentController::class, 'verify'])
-->name('payment.verify');
+    ->name('payment.verify');
 
 Route::middleware(['guest:web', 'guest:admin'])->prefix('admin')->name('admin.')->group(function () {
-   Route::get('register', [AdminController::class, 'registerForm'])->name('register.form');
-   Route::post('register', [AdminController::class, 'register'])->name('register');
-   Route::get('login', [AdminController::class, 'loginForm'])->name('login.form');
-   Route::post('login', [AdminController::class, 'login'])->name('login');
+    Route::get('register', [AdminController::class, 'registerForm'])->name('register.form');
+    Route::post('register', [AdminController::class, 'register'])->name('register');
+    Route::get('login', [AdminController::class, 'loginForm'])->name('login.form');
+    Route::post('login', [AdminController::class, 'login'])->name('login');
 });
 
 Route::middleware('auth:web,admin')->prefix('tickets')->group(function () {
@@ -124,18 +127,32 @@ Route::middleware('auth:web,admin')->prefix('tickets')->group(function () {
 });
 
 Route::middleware('web')->prefix('aparat')->group(function () {
-   Route::get('/', [AparatController::class, 'index'])->name('aparat.index');
-   Route::get('login', [AparatController::class, 'login'])->name('aparat.login');
-   Route::post('upload', [AparatController::class, 'upload'])->name('aparat.upload');
-   Route::get('show', [AparatController::class, 'show'])->name('aparat.show');
-   Route::get('delete', [AparatController::class, 'delete'])->name('aparat.delete');
+    Route::get('/', [AparatController::class, 'index'])->name('aparat.index');
+    Route::get('login', [AparatController::class, 'login'])->name('aparat.login');
+    Route::post('upload', [AparatController::class, 'upload'])->name('aparat.upload');
+    Route::get('show', [AparatController::class, 'show'])->name('aparat.show');
+    Route::get('delete', [AparatController::class, 'delete'])->name('aparat.delete');
 });
 
-Route::get('logout', function (){
+Route::middleware(['web', 'auth'])->prefix('topics')->group(function () {
+    Route::get('/', [TopicController::class, 'index'])->name('topics.index');
+    Route::get('/create', [TopicController::class, 'create'])->name('topics.create');
+    Route::post('/', [TopicController::class, 'store'])->name('topics.store');
+    Route::get('/{topic}', [TopicController::class, 'show'])->name('topics.show');
+    Route::post('/{topic}/reply', [TopicReplyController::class, 'store'])
+        ->name('topic_reply.store');
+});
+
+Route::middleware('auth')->prefix('badges')->group(function () {
+    Route::get('/', [BadgeController::class, 'create'])->name('badges.create');
+    Route::post('/store', [BadgeController::class, 'store'])->name('badges.store');
+});
+
+Route::get('logout', function () {
     auth()->logout();
 });
 
-Route::get('admin/logout', function (){
+Route::get('admin/logout', function () {
     auth()->guard('admin')->logout();
 });
 

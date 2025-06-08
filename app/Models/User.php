@@ -3,6 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Topic\Badge;
+use App\Models\Topic\Topic;
+use App\Models\Topic\Reply as TopicReply;
+use App\Models\Topic\UserStat;
 use App\Services\MagicLogin\Traits\MagicallyAuthenticable;
 use App\Services\Permission\Traits\HasPermissions;
 use App\Services\Permission\Traits\HasRoles;
@@ -118,5 +122,43 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function topics()
+    {
+        return $this->hasMany(Topic::class);
+    }
+
+    public function topicReplies()
+    {
+        return $this->hasMany(TopicReply::class);
+    }
+
+    public function userStat()
+    {
+        return $this->hasOne(UserStat::class);
+    }
+
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class);
+    }
+
+    public function incrementXP($number = 1)
+    {
+        $this->userStat->xp += $number;
+        $this->userStat->save();
+    }
+
+    public function incrementTopicCount()
+    {
+        $this->userStat->topic_count++;
+        $this->userStat->save();
+    }
+
+    public function incrementReplyCount()
+    {
+        $this->userStat->reply_count++;
+        $this->userStat->save();
     }
 }

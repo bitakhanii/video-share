@@ -11,6 +11,13 @@ use App\Listeners\ProcessVideo;
 use App\Listeners\SendEmail;
 use App\Listeners\SendVerificationEmail;
 use App\Models\Comment;
+use App\Models\Topic\Reply;
+use App\Models\Topic\Topic;
+use App\Models\Topic\UserStat;
+use App\Observers\ReplyObserver;
+use App\Observers\TopicObserver;
+use App\Observers\UserObserver;
+use App\Observers\UserStatObserver;
 use App\Support\Coupon\DiscountManager;
 use App\Models\Like;
 use App\Models\User;
@@ -84,6 +91,10 @@ class AppServiceProvider extends ServiceProvider
 
         Like::observe(LikeObserver::class);
         Video::observe(VideoObserver::class);
+        User::observe(UserObserver::class);
+        Topic::observe(TopicObserver::class);
+        Reply::observe(ReplyObserver::class);
+        UserStat::observe(UserStatObserver::class);
 
         Gate::policy(Video::class, VideoPolicy::class);
 
