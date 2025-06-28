@@ -4,11 +4,13 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AparatController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CategoryVideoController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DislikeController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Topic\BadgeController;
 use App\Http\Controllers\VideoController;
@@ -146,6 +148,12 @@ Route::middleware(['web', 'auth'])->prefix('topics')->group(function () {
 Route::middleware('auth')->prefix('badges')->group(function () {
     Route::get('/', [BadgeController::class, 'create'])->name('badges.create');
     Route::post('/store', [BadgeController::class, 'store'])->name('badges.store');
+});
+
+Route::middleware('auth')->prefix('chat')->group(function () {
+    Route::get('/', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::post('messages', [MessageController::class, 'store'])->name('message.store');
 });
 
 Route::get('logout', function () {

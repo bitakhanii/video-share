@@ -161,4 +161,9 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         $this->userStat->reply_count++;
         $this->userStat->save();
     }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
 }
