@@ -23,10 +23,11 @@ class StoreVideoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required'],
-            'slug' => ['required', 'unique:videos', 'alpha_dash'],
-            'file' => ['required', 'file', 'mimes:avi,mkv,mp4'],
-            'category_id' => ['required', 'exists:categories,id'],
+            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'slug' => ['required', 'unique:videos', 'alpha_dash', 'string', 'min:3', 'max:255'],
+            'file' => ['required', 'file', 'mimes:avi,mkv,mp4,mov,MOV'],
+            'category_id' => ['nullable', 'exists:categories,id'],
+            'description' => ['nullable', 'string'],
         ];
     }
 

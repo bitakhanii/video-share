@@ -24,7 +24,14 @@ class StoreCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'body' => ['required'],
+            'body' => ['required', 'string'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'body.required' => 'متن دیدگاه نمی‌تواند خالی باشد !'
         ];
     }
 }

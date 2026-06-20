@@ -103,7 +103,7 @@ class LoginRequest extends FormRequest
         return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
     }
 
-    protected function isValidCredentials()
+    protected function isValidCredentials(): bool
     {
         return Auth::validate($this->only('email', 'password'));
     }

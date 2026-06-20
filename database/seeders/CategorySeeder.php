@@ -13,35 +13,53 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
+
         $categories = [
+            'فیلم و سریال' => [
+                'slug' => 'movies-series',
+                'icon' => 'fa fa-film',
+                'description' => 'فیلم‌ها و سریال‌های ایرانی و خارجی'
+            ],
+            'مستند' => [
+                'slug' => 'documentary',
+                'icon' => 'fa fa-video-camera',
+                'description' => 'مستندهای علمی، تاریخی و طبیعت'
+            ],
+            'آموزشی' => [
+                'slug' => 'educational',
+                'icon' => 'fa fa-book',
+                'description' => 'ویدئوهای آموزشی در حوزه‌های مختلف'
+            ],
+            'موزیک' => [
+                'slug' => 'music',
+                'icon' => 'fa fa-music',
+                'description' => 'موزیک ویدئو و کنسرت‌ها'
+            ],
+            'کودک و نوجوان' => [
+                'slug' => 'kids',
+                'icon' => 'fa fa-child',
+                'description' => 'انیمیشن و برنامه‌های کودکانه'
+            ],
             'ورزشی' => [
-                'slug' => 'sport',
-                'icon' => 'fa fa-futbol-o'
+                'slug' => 'sports',
+                'icon' => 'fa fa-trophy',
+                'description' => 'مسابقات و برنامه‌های ورزشی'
             ],
-            'بازی' => [
-                'slug' => 'game',
-                'icon' => 'fa fa-gamepad'
+            'طنز و سرگرمی' => [
+                'slug' => 'comedy',
+                'icon' => 'fa fa-smile-o',
+                'description' => 'برنامه‌های طنز و سرگرمی'
             ],
-            'تاریخی' => [
-                'slug' => 'historical',
-                'icon' => 'fa fa-university'
+            'فناوری' => [
+                'slug' => 'technology',
+                'icon' => 'fa fa-laptop',
+                'description' => 'بررسی و آموزش فناوری و گجت'
             ],
-            'طنز' => [
-                'slug' => 'fun',
-                'icon' => 'fa fa-smile-o'
+            'آشپزی' => [
+                'slug' => 'cooking',
+                'icon' => 'fa fa-cutlery',
+                'description' => 'آموزش آشپزی و دستور پخت'
             ],
-            'سینما' => [
-                'slug' => 'cinema',
-                'icon' => 'fa fa-film'
-            ],
-            'وحشت' => [
-                'slug' => 'horror',
-                'icon' => 'fa fa-hashtag'
-            ],
-            'تکنولوژی' => [
-                'slug' => 'tech',
-                'icon' => 'fa fa-laptop'
-            ]
         ];
 
         foreach ($categories as $categoryName => $details) {
@@ -49,6 +67,7 @@ class CategorySeeder extends Seeder
                 'name' => $categoryName,
                 'slug' => $details['slug'],
                 'icon' => $details['icon'],
+                'description' => $details['description'],
             ]);
         }
     }

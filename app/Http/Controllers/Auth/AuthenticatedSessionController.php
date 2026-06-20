@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -26,10 +27,11 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Handle an incoming authentication request.
+     * @throws ValidationException
      */
     public function store(LoginRequest $request, TwoFactorAuthentication $auth): RedirectResponse
     {
-        $user = $request->authenticate($auth);
+        $user = $request->authenticate();
 
         session([
             'remember' => $request->remember,
@@ -44,7 +46,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended();
+        return success_redirect('intended', 'welcome');
     }
 
     /**
@@ -58,7 +60,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return success_redirect('index', 'logout');
     }
 
     protected function sendTwoFactorAuthResponse()

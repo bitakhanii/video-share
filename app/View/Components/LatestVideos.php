@@ -3,6 +3,7 @@
 namespace App\View\Components;
 
 use App\Models\Video;
+use App\Services\VideoService;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -13,9 +14,9 @@ class LatestVideos extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(VideoService $videoService)
     {
-        $this->videos = Video::with(['user', 'category'])->latest()->take(6)->get();
+        $this->videos = $videoService->latest();
     }
 
     /**

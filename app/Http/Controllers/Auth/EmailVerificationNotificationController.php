@@ -21,7 +21,7 @@ class EmailVerificationNotificationController extends Controller
         }
 
         $request->user()->sendEmailVerificationNotification();
-
+        
         return back()->with(['alert' => __('alerts.success.send', ['attribute' => 'ایمیل تأیید']), 'alert-type' => 'success']);
     }
 }

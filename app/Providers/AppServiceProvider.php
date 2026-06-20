@@ -60,19 +60,6 @@ class AppServiceProvider extends ServiceProvider
         // Paginator::useBootstrapFive();
         Paginator::useBootstrap();
 
-        Event::listen (
-            VideoCreated::class,
-            SendEmail::class,
-        );
-        Event::listen (
-            VideoCreated::class,
-            CreateThumbnail::class,
-        );
-        Event::listen (
-            VideoCreated::class,
-            ProcessVideo::class,
-        );
-
         Event::listen(
             UserRegistered::class,
             SendVerificationEmail::class,

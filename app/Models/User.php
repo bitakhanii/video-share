@@ -13,7 +13,9 @@ use App\Services\Permission\Traits\HasRoles;
 use App\Services\TwoFactorAuth\Traits\HasTwoFactorAuth;
 use App\Support\Coupon\Traits\Couponable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -63,21 +65,30 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         ];
     }
 
-    public function getGravatarAttribute()
+    /* Accessor Methods */
+
+    public function gravatar(): Attribute
     {
-        $hash = md5($this->email);
-        return "https://s.gravatar.com/avatar/$hash";
+        return Attribute::get(function () {
+            $hash = md5(strtolower($this->email));
+            return "https://s.gravatar.com/avatar/$hash";
+        });
     }
 
-    public function videos()
+    /* End Accessor Methods */
+
+    /* Relation Methods */
+    public function videos(): HasMany
     {
         return $this->hasMany(Video::class);
     }
 
-    public function comments()
+    public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
     }
+
+    /* End Relation Methods */
 
     public function orders()
     {

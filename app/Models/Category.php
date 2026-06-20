@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Support\Coupon\Traits\Couponable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
@@ -16,12 +18,14 @@ class Category extends Model
         'name', 'slug', 'icon', 'description',
     ];
 
-    public function videos()
+    /* Relation Methods */
+    public function videos(): HasMany
     {
         return $this->hasMany(Video::class);
     }
+    /* End Relation Methods */
 
-    public function getRandomVideos(int $count)
+    public function getRandomVideos(int $count): Collection
     {
         return $this->videos()->with(['user', 'category'])->inRandomOrder()->limit($count)->get();
     }

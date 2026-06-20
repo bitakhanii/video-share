@@ -36,7 +36,6 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
 </head>
 
 <body>
@@ -52,7 +51,8 @@
                     <i class="fa fa-close"></i>
                 </a>
                 <div id="logo">
-                    <a href="01-home.html"><img src="img/logo.png" alt=""></a>
+                    <a href="{{ route('index') }}"><img src="{{ Vite::asset('public/img/logo.png') }}"
+                                                alt=""></a>
                 </div>
             </div><!-- // col-md-2 -->
             <div class="col-lg-3 col-md-3 col-sm-6 hidden-xs hidden-sm">
@@ -90,7 +90,9 @@
                             </li>
                             <li><a href="{{ route('orders.index') }}"><i class="fa fa-edit
                             color-1"></i>سفارشات</a></li>
-                            <li><a href="#"><i class="fa fa-video-camera color-2"></i>اضافه کردن
+                            <li><a href="{{ route('videos.create') }}"><i class="fa fa-video-camera
+                            color-2"></i>اضافه
+                                    کردن
                                     فیلم</a></li>
                             <li><a href="{{ route('file.create') }}"><i
                                         class="fa fa-video-camera color-2"></i>آپلود
@@ -126,20 +128,33 @@
 
 <x-header-menu></x-header-menu>
 
-@if(!request()->routeIs('roles.index', 'roles.edit'))
+{{--@if(!request()->routeIs('roles.index', 'roles.edit'))
     <x-validation-errors></x-validation-errors>
-@endif
+@endif--}}
 
 <div class="site-output" id="app">
-    @if(session('alert'))
+   {{-- @if(session('alert'))
         <div class="alert alert-{{ session('alert-type') }}">{{ session('alert') }}</div>
-    @endif
+    @endif--}}
     <div id="all-output" class="col-md-12" style="margin-top: 30px !important;">
         @yield('content')
     </div>
 </div>
 
+{{--@if (session('alert'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            window.showSweetAlert(
+                @json(session('alert')),
+                @json(session('alert-type', 'info'))
+            );
+        });
+    </script>
+@endif--}}
+
 {{--<script src="{{ asset('js/main.js') }}"></script>--}}
+
+@include('sweetalert::alert')
 
 <script>
 

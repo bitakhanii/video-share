@@ -37,13 +37,11 @@
 
 <body class="@yield('body-class')">
 
-@if(session('alert'))
-    <div class="alert alert-{{ session('alert-type') }}">{{ session('alert') }}</div>
-@endif
-
 @yield('content')
 
 {{--<script src="{{ asset('js/main.js') }}"></script>--}}
 </body>
+
+@include('sweetalert::alert')
 
 </html>

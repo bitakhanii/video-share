@@ -2,9 +2,12 @@
 
 use App\Events\VideoCreated;
 use App\Exceptions\InvalidTypeException;
-use App\Http\Controllers\IndexController;
+use App\Http\Controllers\Front\IndexController;
 use App\Jobs\Otp;
+use App\Mail\ForgetPassword;
 use App\Mail\UserRegistered;
+use App\Mail\VerifyEmail;
+use App\Models\User;
 use App\Models\Video;
 use App\Notifications\VideoProcessed;
 use App\Services\FFmpegAdapter;
@@ -13,21 +16,23 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
-use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 
 Route::get('/tst', [IndexController::class, 'test'])->name('test');
 Route::get('/email', function () {
     $user = User::first();
-    return Mail::to('bita@gmail.com')->send(new VerifyEmailMail($user));
+    return Mail::to('bita@gmail.com')->send(new VerifyEmail($user));
+});
+Route::get('/email-view', function () {
+    $user = User::first();
+    return new ForgetPassword($user);
 });
 Route::get('generate', function () {
-    echo URL::temporarySignedRoute('verify', now()->addSecond(10), ['id' => 4]);
+    echo URL::temporarySignedRoute('verify', now()->addSeconds(10), ['id' => 4]);
 });
 Route::get('verify/{id}', function () {
     dd(request()->hasValidSignature());
-    //echo 'verify4';
 })->name('verify');
 
 Route::get('/queue', function () {

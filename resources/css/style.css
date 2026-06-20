@@ -1081,7 +1081,7 @@ h1.new-video-title .fa {
 
 .video-item .video-info {
     background-color: #FFF;
-    padding: 25px;
+    padding: 15px 15px 0 15px;
 }
 
 .video-item a.title {
@@ -2881,4 +2881,30 @@ h1.new-video-title .fa {
     text-transform: uppercase;
     padding-top: 8px;
     padding-bottom: 8px;
+}
+
+/* ۱. تنظیم ارتفاع ثابت برای نگهدارنده عکس */
+.video-item .thumb {
+    height: 160px !important; /* این مقدار را بسته به دیزاین خود می‌توانید تغییر دهید */
+    overflow: hidden;
+    position: relative;
+}
+
+/* ۲. تنظیم عکس برای پر کردن کامل کادر بدون دفرمه شدن */
+.video-item .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ۳. هم‌اندازه کردن ارتفاع کل باکس‌ها در یک سطر (برای زمانی که طول متن‌ها متفاوت است) */
+.video-item {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* ۴. هل دادن اطلاعات به پایین برای یکدست شدن ظاهر باکس */
+.video-item .video-info {
+    flex-grow: 1;
 }

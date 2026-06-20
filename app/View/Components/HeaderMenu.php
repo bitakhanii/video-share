@@ -5,6 +5,7 @@ namespace App\View\Components;
 use App\Models\Category;
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\Component;
 
 class HeaderMenu extends Component
@@ -13,7 +14,7 @@ class HeaderMenu extends Component
      * Create a new component instance.
      */
 
-    public $categories;
+    public Collection $categories;
 
     public function __construct()
     {
