@@ -13,79 +13,86 @@ trait Likeable
         return $this->morphMany(Like::class, 'likeable');
     }
 
-    public function getLikesCountAttribute()
+    public function getLikesCountAttribute(): int
     {
-        $cacheKeyName = 'likes_count_for_' . class_basename($this) . '_' . $this->id;
-        return Cache::remember($cacheKeyName, 3600, function () {
-            return $this->likes()->where('vote', 1)->count();
-        });
+        return Cache::remember(
+            $this->cacheKey('likes'),
+            3600,
+            fn() => $this->likes()->where('vote', 1)->count()
+        );
     }
 
-    public function getDislikesCountAttribute()
+    public function getDislikesCountAttribute(): int
     {
-        $cacheKeyName = 'dislikes_count_for_' . class_basename($this) . '_' . $this->id;
-        return Cache::remember($cacheKeyName, 3600, function () {
-            return $this->likes()->where('vote', -1)->count();
-        });
+        return Cache::remember(
+            $this->cacheKey('dislikes'),
+            3600,
+            fn() => $this->likes()->where('vote', -1)->count()
+        );
     }
 
-    public function likedBy(User $user)
+    public function likedBy(User $user): string
     {
-        if ($this->isDislikedBy($user)) {
-            $this->getLikeable($user, -1)->delete();
-            return $this->createLike($user);
-        }
-
-        if ($this->isLikedBy($user)) {
-            return $this->getLikeable($user, 1)->delete();
-        };
-
-        $this->createLike($user);
+        return $this->applyVote($user, 1);
     }
 
-    public function dislikedBy(User $user)
+    public function dislikedBy(User $user): string
     {
-        if ($this->isLikedBy($user)) {
-            $this->getLikeable($user, 1)->delete();
-            return $this->createDislike($user);
-        }
-
-        if ($this->isDislikedBy($user)) {
-            return $this->getLikeable($user, -1)->delete();
-        }
-        $this->createDislike($user);
+        return $this->applyVote($user, -1);
     }
 
-    private function isLikedBy(User $user)
+    public function isLikedBy(User $user): bool
     {
-        return $this->getLikeable($user, 1)->exists();
+        return $this->getUserVote($user) === 1;
     }
 
-    private function isDislikedBy(User $user)
+    public function isDislikedBy(User $user): bool
     {
-        return $this->getLikeable($user, -1)->exists();
+        return $this->getUserVote($user) === -1;
     }
 
-    private function getLikeable(User $user, $vote)
+    // ─────────── Private Helpers ─────────────
+
+    private function getUserVote(User $user): ?int
     {
         return $this->likes()
             ->where('user_id', $user->id)
-            ->where('vote', $vote);
+            ->value('vote');
     }
 
-    private function createLike(User $user)
+    private function applyVote(User $user, int $vote): string
     {
-        return $this->likes()->create([
-            'user_id' => $user->id,
-            'vote' => 1,
-        ]);
+        $current = $this->getUserVote($user);
+
+        if ($current === $vote) {
+            $this->likes()->where('user_id', $user->id)->delete();
+            $status = 'removed';
+        } elseif ($current !== null) {
+            // if user disliked before, and now she wants to like
+            $this->likes()
+                ->where('user_id', $user->id)
+                ->update(['vote' => $vote]);
+            $status = 'changed';
+        } else {
+            $this->likes()->create([
+                'user_id' => $user->id,
+                'vote' => $vote,
+            ]);
+            $status = 'added';
+        }
+
+        $this->forgetLikeCache();
+        return $status;
     }
 
-    private function createDislike(User $user)
+    private function cacheKey(string $type): string
     {
-        return $this->likes()->create([
-            'user_id' => $user->id,
-            'vote' => -1,
-        ]);
+        return "{$type}_count_for_" . class_basename($this) . "_{$this->id}";
+    }
+
+    private function forgetLikeCache(): void
+    {
+        Cache::forget($this->cacheKey('likes'));
+        Cache::forget($this->cacheKey('dislikes'));
     }
 }

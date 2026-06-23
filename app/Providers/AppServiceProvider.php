@@ -74,6 +74,9 @@ class AppServiceProvider extends ServiceProvider
             $model_name = 'App\\Models\\'. ucfirst($route->parameters['likeable_type']);
             $routeKey = (new $model_name)->getRouteKeyName();
             return $model_name::where($routeKey, $value)->firstOrFail();
+            // equals: (↑ and ↓)
+            // return $model_name::where($routeKey, $route->parameters['likeable_id'])
+            //->firstOrFail();
         });
 
         Like::observe(LikeObserver::class);

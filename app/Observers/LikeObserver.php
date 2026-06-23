@@ -23,7 +23,7 @@ class LikeObserver
         Cache::put('likes_count_for_'.class_basename($likeable).'_'. $likeable->id, $likeable->likes()->where('vote', 1)->count(), 3600);
         Cache::put('dislikes_count_for_'.class_basename($likeable).'_'.$likeable->id, $likeable->likes()->where('vote', -1)->count(), 3600);
 
-        $like->likeable->user->notify(new ResourceWasLiked(class_basename($likeable)));
+        $likeable->user->notify(new ResourceWasLiked($like));
     }
 
     /**

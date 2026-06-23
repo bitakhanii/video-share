@@ -32,6 +32,7 @@ class LikeFactory extends Factory
     {
         return $this->faker->randomElement([
             Comment::class,
+            Video::class,
         ]);
     }
 }

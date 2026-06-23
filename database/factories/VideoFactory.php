@@ -38,8 +38,6 @@ class VideoFactory extends Factory
                 $randomCategory, $randomCategory, null]),
 
             'user_id' => User::query()->inRandomOrder()->value('id') ?? User::factory()->create(),
-
-
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Like extends Model
 {
@@ -13,8 +14,11 @@ class Like extends Model
         'user_id', 'likeable_id', 'likeable_type', 'vote',
     ];
 
-    public function likeable()
+    /* Relation Methods */
+    public function likeable(): MorphTo
     {
         return $this->morphTo();
     }
+
+    /* End Relation Methods */
 }

@@ -11,13 +11,24 @@
                     <a href="#" class="author-name">{{ $comment->user->name }}</a>
                     <time
                         datetime="2017-03-24T18:18">{{ $comment->created_at }}</time>
-                    <a class='deslike mr-5' style="color: #aaaaaa"
-                       href="{{ route('dislikes.store', ['likeable_type' => 'comment', 'likeable_id' => $comment]) }}">{{ $comment->dislikes_count }}
-                        <i class="fa fa-thumbs-down"></i></a>
-                    <a class='like mr-5' style="color: #66c0c2"
-                       href="{{ route('likes.store', ['likeable_type' => 'comment', 'likeable_id' => $comment]) }}">{{ $comment->likes_count }}
-                        <i
-                            class="fa fa-thumbs-up"></i></a>
+
+                    <div class="comment-like-container" style="display: inline-block">
+                        <a class="deslike dislike-resource" data-id="{{ $comment->id }}"
+                           data-resource="comment"
+                           style="color: @if($comment->isDislikedBy(auth()->user())) #e0001c @endif"
+                           href="#">
+                                <span
+                                    style="margin-left: 5px;">{{ $comment->dislikes_count }}</span>
+                            <i class="fa fa-thumbs-down"></i></a>
+
+                        <a class="like like-resource" data-id="{{ $comment->id }}"
+                           data-resource="comment"
+                           style="color: @if($comment->isLikedBy(auth()->user())) #1b87ff @endif"
+                           href="#">
+                            <span style="margin-left: 5px;">{{ $comment->likes_count }}</span>
+                            <i class="fa fa-thumbs-up"></i></a>
+                    </div>
+
                 </div>
                 <p>{{ $comment->body }}</p>
                 <a href="#" class="reply">پاسخ</a>

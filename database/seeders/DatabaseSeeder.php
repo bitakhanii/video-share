@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\Like;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
@@ -23,7 +24,9 @@ class DatabaseSeeder extends Seeder
         //Product::factory(30)->create();
         //Article::factory(12)->create();
 
-       //Video::factory(20)->hasComments(3)->hasLikes(5)->create();
+        //Video::factory(20)->hasComments(3)->hasLikes(5)->create();
+
+        Like::factory(500)->create();
 
         //Category::factory(2)->create();
         /*User::factory()->create([

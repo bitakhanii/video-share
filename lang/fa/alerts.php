@@ -5,6 +5,16 @@ return [
         'create' => ':attribute با موفقیت ایجاد شد.',
         'update' => ':attribute با موفقیت ویرایش شد.',
         'send' =>   ':attribute با موفقیت ارسال شد.',
+        'like' => [
+            'added' => ':attribute موردنظر لایک شد.',
+            'removed' => 'لایک برداشته شد',
+            'changed' => ':attribute موردنظر لایک شد.',
+        ],
+        'dislike' => [
+            'added' => ':attribute موردنظر دیسلایک شد.',
+            'removed' => 'دیسلایک برداشته شد',
+            'changed' => ':attribute موردنظر دیسلایک شد.',
+        ],
         'verify' => ':attribute شما با موفقیت تأیید شد.',
         'activate' => ':attribute با موفقیت فعال گردید.',
         'deactivate' => ':attribute با موفقیت غیرفعال گردید.',

@@ -2,6 +2,9 @@
 
 namespace App\Notifications;
 
+use App\Models\Comment;
+use App\Models\Like;
+use App\Models\Video;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -11,15 +14,14 @@ class ResourceWasLiked extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    private $likeable;
-
+    private Like $like;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($likeable)
+    public function __construct(Like $like)
     {
-        $this->likeable = $likeable;
+        $this->like = $like;
     }
 
     /**
@@ -38,7 +40,7 @@ class ResourceWasLiked extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->view('emails.resource-was-liked', ['likeable' => $this->likeable]);
+                    ->view('emails.resource-was-liked', ['like' => $this->like]);
     }
 
     /**

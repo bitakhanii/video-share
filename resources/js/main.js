@@ -1,8 +1,16 @@
+import $ from 'jquery';
+window.$ = $;
+window.jQuery = $;
+
+import Swal from 'sweetalert2';
+window.Swal = Swal;
+
 import './bootstrap.js';
-import './app';
 import './jquery.sticky-kit.min';
+import './app';
+import './csrf-token';
 import './custom';
-import './bootstrap.min';
 import './imagesloaded.pkgd.min';
 import './grid-blog.min';
-import './bootstrap';
+import './sweet-alert.js';
+import './ajax';

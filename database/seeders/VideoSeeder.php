@@ -20,17 +20,24 @@ class VideoSeeder extends Seeder
             $base = $base->copy()->addDays(rand(1, 11));
             $createdAt = $base;
 
-            Video::factory()->hasComments(rand(3, 15), function () use ($createdAt) {
-                return [
-                    'created_at' => fake()->dateTimeBetween($createdAt, 'now'),
-                ];
-            })->create([
-                'file' => $number . '.MP4',
-                'thumbnail' => $number . '.JPG',
-                'created_at' => $createdAt,
-                'updated_at' => fake()->randomElement([fake()->dateTimeBetween($createdAt, 'now'),
-                    $createdAt, $createdAt, $createdAt, $createdAt]),
-            ]);
+            Video::factory()
+                ->hasComments(rand(3, 15), function () use ($createdAt) {
+                    return [
+                        'created_at' => fake()->dateTimeBetween($createdAt, 'now'),
+                    ];
+                })
+                ->hasLikes(rand(5, 15), function () use ($createdAt) {
+                    return [
+                        'created_at' => fake()->dateTimeBetween($createdAt, 'now'),
+                    ];
+                })
+                ->create([
+                    'file' => $number . '.MP4',
+                    'thumbnail' => $number . '.JPG',
+                    'created_at' => $createdAt,
+                    'updated_at' => fake()->randomElement([fake()->dateTimeBetween($createdAt, 'now'),
+                        $createdAt, $createdAt, $createdAt, $createdAt]),
+                ]);
         }
     }
 

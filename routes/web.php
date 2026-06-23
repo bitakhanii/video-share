@@ -5,13 +5,13 @@ use App\Http\Controllers\AparatController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CouponController;
-use App\Http\Controllers\DislikeController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\Front\CategoryVideoController;
 use App\Http\Controllers\Front\CommentController;
+use App\Http\Controllers\Front\DislikeController;
 use App\Http\Controllers\Front\IndexController;
+use App\Http\Controllers\Front\LikeController;
 use App\Http\Controllers\Front\VideoController;
-use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
@@ -46,11 +46,14 @@ Route::middleware('auth')->group(function () {
     Route::post('videos/{video}/comments', [CommentController::class, 'store'])->middleware('auth')
         ->name('comments.store');
 
+    Route::get('{likeable_type}/{likeable_id}/like', [LikeController::class, 'store'])
+        ->name('likes.store');
+    Route::get('{likeable_type}/{likeable_id}/dislike', [DislikeController::class, 'store'])
+        ->name('dislikes.store');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('{likeable_type}/{likeable_id}/like', [LikeController::class, 'store'])->name('likes.store');
-    Route::get('{likeable_type}/{likeable_id}/dislike', [DislikeController::class, 'store'])->name('dislikes.store');
     Route::get('notification/email', [NotificationController::class, 'email'])->name('notification.email');
     Route::post('notification/email', [NotificationController::class, 'sendEmail'])->name('notification.email.send');
     Route::get('notification/sms', [NotificationController::class, 'sms'])->name('notification.sms');
