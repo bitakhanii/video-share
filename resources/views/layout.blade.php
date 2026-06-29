@@ -17,6 +17,7 @@
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
           rel="stylesheet"
           type="text/css"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!--Google Fonts-->
     <link
@@ -54,7 +55,7 @@
             </div><!-- // col-md-2 -->
             <div class="col-lg-3 col-md-3 col-sm-6 hidden-xs hidden-sm">
                 <div class="search-form">
-                    <form id="search" action="#" method="get">
+                    <form id="hgh" action="{{ route('videos.search') }}" method="GET">
                         <input type="text" name="q" value="{{ request()->query('q') }}"
                                style="text-align: right;"
                                placeholder="جستجو ..."/>
@@ -74,7 +75,9 @@
             @auth
                 <div class="col-lg-2 col-md-2 col-sm-3 hidden-xs hidden-sm">
                     <div class="dropdown">
-                        <a data-toggle="dropdown" href="#" class="user-area">
+                        <a data-bs-toggle="dropdown"
+                           href="#"
+                           class="user-area">
                             <div class="thumb"><img
                                     src="{{ auth()->user()->gravatar }}" alt="">
                             </div>

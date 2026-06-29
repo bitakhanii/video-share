@@ -14,5 +14,3 @@ const app = createApp({});
 components(app);
 
 app.mount('#app');
-
-

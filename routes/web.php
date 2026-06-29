@@ -11,6 +11,7 @@ use App\Http\Controllers\Front\CommentController;
 use App\Http\Controllers\Front\DislikeController;
 use App\Http\Controllers\Front\IndexController;
 use App\Http\Controllers\Front\LikeController;
+use App\Http\Controllers\Front\SearchController;
 use App\Http\Controllers\Front\VideoController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
@@ -36,6 +37,8 @@ Route::get('videos/{video}/edit', [VideoController::class, 'edit'])->name('video
 Route::put('videos/{video}', [VideoController::class, 'update'])->name('videos.update');
 
 Route::get('categories/{category:slug}/videos', [CategoryVideoController::class, 'index'])->name('categories.videos.index');
+
+Route::get('/search', [SearchController::class, 'index'])->name('videos.search');
 
 
 Route::get('/dashboard', function () {

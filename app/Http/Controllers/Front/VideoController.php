@@ -21,12 +21,16 @@ use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller implements HasMiddleware
 {
-
     public static function middleware(): array
     {
         return [
             new Middleware('verified', except: ['show']),
         ];
+    }
+
+    // به صورت readonly تعریف شده تا پس از مقداردهی اولیه، غیرقابل تغییر باشد.(اختیاری)
+    public function __construct(private readonly VideoService $videoService)
+    {
     }
 
     public function create(): View
@@ -37,7 +41,7 @@ class VideoController extends Controller implements HasMiddleware
 
     public function store(StoreVideoRequest $request): RedirectResponse
     {
-        (new VideoService)->store($request->user(), $request->all());
+        $this->videoService->store($request->user(), $request->all());
 
         return success_redirect('index', 'create', 'ویدئو');
     }
@@ -45,6 +49,8 @@ class VideoController extends Controller implements HasMiddleware
     public function show(Video $video): View
     {
         // Gate::authorize('view', $video);
+
+        $video->increment('views');
 
         $video->load(['comments.user', 'likes', 'category']);
         return view('videos.show.index', compact('video'));
@@ -60,30 +66,9 @@ class VideoController extends Controller implements HasMiddleware
 
     public function update(UpdateVideoRequest $request, Video $video): RedirectResponse
     {
-        (new VideoService)->update($video, $request->all());
+        $this->videoService->update($video, $request->all());
 
         return success_redirect('back', 'update', 'ویدئو');
-    }
-
-    public function cutVideo(Request $request)
-    {
-        $path = Storage::putFile('', $request->file);
-        $videoPath = Storage::path($path);
-        $ffmpeg = FFMpeg::create([
-            'ffmpeg.binaries' => 'C:/ffmpeg/bin/ffmpeg.exe',
-            'ffprobe.binaries' => 'C:/ffmpeg/bin/ffprobe.exe'
-        ]);
-        $video = $ffmpeg->open($videoPath);
-
-        $ffprobe = $ffmpeg->getFFProbe();
-        $video_probe = $ffprobe->format($videoPath);
-        $duration = (int)$video_probe->get('duration');
-
-        if ($duration > 40) {
-            $video->filters()->clip(TimeCode::fromSeconds(0), TimeCode::fromSeconds(40))->synchronize();
-            $video->save(new X264(), storage_path('app/public/test/' . '1.mp4'));
-            unlink($videoPath);
-        }
     }
 }
 

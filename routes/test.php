@@ -50,7 +50,8 @@ Route::get('notify', function () {
 });
 Route::get('file', function () {
     // return response()->file(storage_path('app/private/adv.jpg'));
-    $content = Storage::get('adv.jpg');
+    // return Storage::download('/videos/1.MP4');
+    $content = Storage::get('/thumbnails/1.JPG');
     return Response::make($content)->header('content-type', 'image/jpg');
 });
 Route::get('duration', function () {

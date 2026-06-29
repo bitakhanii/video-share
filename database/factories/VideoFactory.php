@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Category;
 use App\Models\User;
+use App\Models\Video;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -28,6 +29,8 @@ class VideoFactory extends Factory
             'thumbnail' => '',
 
             'length' => fake()->numberBetween('5', '2000'),
+
+            'views' => fake()->numberBetween('20', '4000'),
 
             'slug' => fake()->slug(),
 

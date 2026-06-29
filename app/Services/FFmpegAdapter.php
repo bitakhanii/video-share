@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use AllowDynamicProperties;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use Illuminate\Support\Facades\Storage;
 
+#[AllowDynamicProperties]
 class FFmpegAdapter
 {
     public function __construct(public string $path)
@@ -19,15 +21,14 @@ class FFmpegAdapter
         $this->video_probe = $ffprobe->format(Storage::path($this->path));
 
         $this->video = $ffmpeg->open(Storage::path($this->path));
-
     }
 
-    public function getDuration()
+    public function getDuration(): int
     {
         return (int)$this->video_probe->get('duration');
     }
 
-    public function getThumbnail()
+    public function getThumbnail(): string
     {
         $fileName = pathinfo($this->path, PATHINFO_FILENAME) . '.jpg';
         $storage_path = storage_path('app/public/thumbnails/' . $fileName);

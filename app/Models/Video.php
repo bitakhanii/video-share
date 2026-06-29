@@ -12,6 +12,7 @@ use Hekmatinasser\Verta\Verta;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -21,7 +22,8 @@ class Video extends Model
     use HasFactory, Likeable, SoftDeletes;
 
     protected $fillable = [
-        'name', 'slug', 'description', 'file', 'thumbnail', 'length', 'category_id', 'user_id',
+        'name', 'slug', 'description', 'file', 'thumbnail', 'length', 'views', 'category_id',
+'user_id',
     ];
 
     protected $perPage = 3;
@@ -54,13 +56,7 @@ class Video extends Model
 
     public function videoThumbnail(): Attribute
     {
-        return Attribute::get(function () {
-            if (str_starts_with($this->thumbnail, 'http')) {
-                return $this->thumbnail;
-            } else {
-                return '/storage/thumbnails/' . $this->thumbnail;
-            }
-        });
+        return Attribute::get(fn() => '/storage/thumbnails/' . $this->thumbnail);
     }
 
     public function videoUrl(): Attribute
@@ -111,12 +107,12 @@ class Video extends Model
 
     /* End Relation Methods */
 
-    public function relatedVideos(int $count = 5)
+    public function relatedVideos(int $count = 5): Collection
     {
         return $this->category->getRandomVideos($count)->except($this->id);
     }
 
-    public function scopeFilter(Builder $builder, array $params)
+    public function scopeFilter(Builder $builder, array $params): Builder
     {
         return (new VideoFilters($builder))->apply($params);
     }

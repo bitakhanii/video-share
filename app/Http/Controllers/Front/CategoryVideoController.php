@@ -18,6 +18,10 @@ class CategoryVideoController extends Controller
             ->paginate()
             ->withQueryString();
 
-        return view('videos.index.index', compact('title', 'videos'));
+        return view('videos.index.index', compact('title', 'videos'))
+            ->with([
+                'sortByQuery' => request('sortBy'),
+                'lengthQuery' => request('length'),
+            ]);
     }
 }

@@ -25,7 +25,7 @@ class StoreVideoRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:3', 'max:255'],
             'slug' => ['required', 'unique:videos', 'alpha_dash', 'string', 'min:3', 'max:255'],
-            'file' => ['required', 'file', 'mimes:avi,mkv,mp4,mov,MOV'],
+            'file' => ['required', 'file', 'mimes:avi,mkv,mp4,mov'],
             'category_id' => ['nullable', 'exists:categories,id'],
             'description' => ['nullable', 'string'],
         ];
@@ -38,10 +38,10 @@ class StoreVideoRequest extends FormRequest
         ]);
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'file.*' => 'فایل باید معتبر باشد.'
+            'file.*' => 'ویدئو باید معتبر باشد.'
         ];
     }
 }

@@ -11,7 +11,7 @@ class VideoFilters
     {
     }
 
-    public function apply(array $params)
+    public function apply(array $params): Builder
     {
         foreach ($params as $methodName => $value) {
             if (method_exists($this, $methodName) && !empty($value)) {
@@ -22,26 +22,35 @@ class VideoFilters
         return $this->builder;
     }
 
-    private function q($value)
+    private function q($value): void
     {
         $this->builder->where('name', 'like', "%$value%");
     }
 
-    private function sortBy($value)
+    private function sortBy($value): void
     {
         if ($value == 'length') {
             $this->builder->orderBy('length', 'desc');
         }
 
         if ($value == 'like') {
-            $this->builder->leftJoin('likes', function ($join) {
+            // Way 1
+
+            $this->builder
+                ->withCount(['likes' => function ($query) {
+                    $query->where('vote', 1);
+                }])
+                ->orderBy('likes_count', 'desc');
+
+            // Way 2
+            /*$this->builder->leftJoin('likes', function ($join) {
                 $join->on('likes.likeable_id', '=', 'videos.id')
                     ->where('likeable_type', '=', 'App\Models\Video')
                     ->where('likes.vote', '=', '1');
             })
                 ->groupBy('videos.id')
                 ->select(['videos.*', DB::raw('count(likes.id) as count')])
-                ->orderBy('count', 'desc');
+                ->orderBy('count', 'desc');*/
         }
 
         if ($value == 'created_at') {
@@ -49,16 +58,19 @@ class VideoFilters
         }
     }
 
-    private function length($value)
+    private function length($value): void
     {
+        //lower than 10 minutes
         if ($value == 1) {
             $this->builder->where('length', '<', 600);
         }
 
+        //between 10 and 30 minutes
         if ($value == 2) {
             $this->builder->whereBetween('length', [600, 1800]);
         }
 
+        //higher than 30 minutes
         if ($value == 3) {
             $this->builder->where('length', '>', 1800);
         }
