@@ -54,6 +54,17 @@
                             </div>
                         </div>
                     </form>
+
+                    @can('delete', $video)
+                        <div class="col-md-2">
+                            <form action="{{ route('videos.destroy', $video) }}" method="POST">
+                                @method('DELETE')
+                                @csrf
+                                <button type="submit" class="btn btn-dm btn-danger">حذف ویدئو
+                                </button>
+                            </form>
+                        </div>
+                    @endcan
                 </div><!-- // col-md-8 -->
 
                 <div class="col-md-4">

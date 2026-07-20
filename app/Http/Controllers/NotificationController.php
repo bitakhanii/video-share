@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Jobs\SendEmail;
 use App\Jobs\SendSms;
 use App\Models\User;
+use App\Models\Video;
 use App\Services\Notification\Constants\EmailTypes;
 use App\Services\Notification\Notification;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Mailable;
 use Throwable;
 
 class NotificationController extends Controller
@@ -25,17 +27,17 @@ class NotificationController extends Controller
         $request->validate([
             'user' => ['integer', 'exists:users,id'],
             'email_type' => ['integer'],
-        ]);
+        ], ['user' => __('notification.user_id_not_found')]);
 
         try {
             $user = User::query()->find($request->user);
-            $mailable = EmailTypes::toMail($request->email_type);
-            SendEmail::dispatch($user, new $mailable);
+            $mailable = EmailTypes::toMail($request->email_type, ['user' => $user]);
+            SendEmail::dispatch($user, $mailable);
 
-            return redirect()->back()->with('success', 'ایمیل با موفقیت ارسال شد.');
+            return $this->redirectBack('success', 'sending_queued', 'email');
 
         } catch (Throwable $th) {
-            return $this->redirectBack('failed', 'service_has_a_problem', 'ایمیل');
+            return $this->redirectBack('failed', 'service_has_a_problem', 'email');
         }
     }
 
@@ -45,24 +47,26 @@ class NotificationController extends Controller
         return view('notification.sms', compact('users'));
     }
 
-    public function sendSms(Request $request, Notification $notification)
+    public function sendSms(Request $request)
     {
         $request->validate([
             'user' => ['integer', 'exists:users,id'],
             'text' => ['string', 'max:256'],
-        ], ['user.integer' => 'کاربری با این آیدی وجود ندارد.']);
+        ], ['user' => __('notification.user_id_not_found')]);
 
         try {
-            $user = User::query()->find($request->user);
+            $user = User::query()->findOrFail($request->user);
             SendSms::dispatch($user, $request->text);
-            return $this->redirectBack('success', 'sms_sent_successfully');
-        } catch (Exception $e) {
-            return $this->redirectBack('failed', 'service_has_a_problem', 'پیام کوتاه');
+            return $this->redirectBack('success', 'sending_queued', 'sms');
+        } catch (Throwable $e) {
+            return $this->redirectBack('failed', 'service_has_a_problem', 'sms');
         }
     }
 
     private function redirectBack(string $alert, string $message, String $replace = '')
     {
-        return redirect()->back()->with($alert, __('notification.' . $message , ['attribute' => $replace]));
+        return redirect()
+            ->back()
+            ->with($alert, __('notification.' . $message , ['attribute' => __('notification.' . $replace)]));
     }
 }

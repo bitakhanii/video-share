@@ -2,13 +2,13 @@
 
 @section('title' , 'Send SMS')
 
-
 @section('content')
     <x-alerts></x-alerts>
     <div class="row justify-content-md-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
+                    @lang('notification.send-sms')
                 </div>
                 <div class="card-body">
                     <x-validation-errors></x-validation-errors>
@@ -18,7 +18,9 @@
                             <label for="user">@lang('notification.users')</label>
                             <select name="user" class="form-control" id="user">
                                 @foreach($users as $user)
-                                    <option value="{{ $user->id }}" {{ old('user') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                    <option value="{{ $user->id }}" {{ old('user') == $user->id ? 'selected' : '' }}>
+                                        {{ $user->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>

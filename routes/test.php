@@ -1,15 +1,12 @@
 <?php
 
-use App\Events\VideoCreated;
+
 use App\Exceptions\InvalidTypeException;
 use App\Http\Controllers\Front\IndexController;
 use App\Jobs\Otp;
-use App\Mail\ForgetPassword;
 use App\Mail\UserRegistered;
-use App\Mail\VerifyEmail;
 use App\Models\User;
 use App\Models\Video;
-use App\Notifications\VideoProcessed;
 use App\Services\FFmpegAdapter;
 use App\Services\Notification\Notification;
 use Illuminate\Support\Facades\Log;
@@ -26,7 +23,7 @@ Route::get('/email', function () {
 });
 Route::get('/email-view', function () {
     $user = User::first();
-    return new ForgetPassword($user);
+    return new UserRegistered($user);
 });
 Route::get('generate', function () {
     echo URL::temporarySignedRoute('verify', now()->addSeconds(10), ['id' => 4]);
@@ -81,12 +78,13 @@ Route::get('notification', function () {
 
 Route::get('send-email', function () {
     $notification = resolve(Notification::class);
-    $notification->sendEmail(User::query()->find(31), new UserRegistered());
+    $user = User::query()->find(31);
+    $notification->sendEmail($user, new UserRegistered($user));
 });
 
 Route::get('send-sms', function () {
     $notification = resolve(Notification::class);
-    $notification->sendSms(User::query()->find(16), 'Hello');
+    return $notification->sendSms(User::query()->find(1), 'به وبسایت ما خوش آمدید.');
 });
 
 Route::get('send-tel', function () {

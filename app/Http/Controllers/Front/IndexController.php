@@ -13,7 +13,7 @@ class IndexController extends Controller
         $this->videoService = $videoService;
     }
 
-    public function index()
+    public function __invoke()
     {
         return view('index', [
             'mostPopularVideos' => $this->videoService->mostPopular(),

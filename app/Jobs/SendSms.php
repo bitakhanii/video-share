@@ -11,13 +11,13 @@ class SendSms implements ShouldQueue
 {
     use Queueable;
 
-    private $user;
-    private $text;
+    private User $user;
+    private string $text;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(User $user, String $text)
+    public function __construct(User $user, string $text)
     {
         $this->user = $user;
         $this->text = $text;
@@ -25,9 +25,14 @@ class SendSms implements ShouldQueue
 
     /**
      * Execute the job.
+     * @throws \Exception
      */
     public function handle(Notification $notification)
     {
-        $notification->sendSms($this->user, $this->text);
+        $result = $notification->sendSms($this->user, $this->text);
+
+        if (! $result['success']) {
+            throw new \Exception($result['message']);
+        }
     }
 }

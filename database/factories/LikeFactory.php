@@ -24,7 +24,7 @@ class LikeFactory extends Factory
             'user_id' => User::query()->inRandomOrder()->first() ?? User::factory()->create(),
             'likeable_type' => $likeable,
             'likeable_id' => $likeable::query()->inRandomOrder()->first() ?? $likeable::factory()->create(),
-            'vote' => $this->faker->randomElement([1, -1]),
+            'vote' => $this->faker->randomElement([1, 1, 1, 1, 1, 1, -1]),
         ];
     }
 

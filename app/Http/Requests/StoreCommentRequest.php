@@ -12,8 +12,11 @@ class StoreCommentRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        //these 3 codes, return same result
+
         //return $this->video->user_id !== $this->user()->id;
-        return  $this->user()->can('create', [Comment::class, $this->video]);
+        //Gate::authorize('create', [Comment::class, $video]);
+        return $this->user()->can('create', [Comment::class, $this->video]);
     }
 
     /**
@@ -28,7 +31,7 @@ class StoreCommentRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'body.required' => 'متن دیدگاه نمی‌تواند خالی باشد !'

@@ -21,7 +21,8 @@ class VideoObserver
     public function updated(Video $video): void
     {
         if ($video->wasChanged('file')) {
-            Storage::delete($video->getOriginal('file'));
+            Storage::delete('videos/' . $video->getOriginal('file'));
+            Storage::delete('thumbnails/' . $video->getOriginal('thumbnail'));
         }
     }
 
@@ -30,9 +31,7 @@ class VideoObserver
      */
     public function deleted(Video $video)
     {
-        if ($video->trashed()) return true;
-        Storage::delete($video->file);
-        Storage::delete('thumbnails/' . $video->thumbnail);
+        //
     }
 
     /**
@@ -48,7 +47,7 @@ class VideoObserver
      */
     public function forceDeleted(Video $video): void
     {
-        Storage::delete($video->file);
+        Storage::delete('videos/' . $video->file);
         Storage::delete('thumbnails/' . $video->thumbnail);
     }
 }

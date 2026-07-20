@@ -12,6 +12,7 @@ use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -25,6 +26,7 @@ class VideoController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('verified', except: ['show']),
+            new Middleware('can:update,video', only: ['edit', 'update']),
         ];
     }
 
@@ -43,23 +45,32 @@ class VideoController extends Controller implements HasMiddleware
     {
         $this->videoService->store($request->user(), $request->all());
 
-        return success_redirect('index', 'create', 'ویدئو');
+        return success_redirect('index', 'create', 'video');
     }
 
     public function show(Video $video): View
     {
-        // Gate::authorize('view', $video);
-
         $video->increment('views');
 
-        $video->load(['comments.user', 'likes', 'category']);
+        $userId = auth()->id();
+
+        $video->load([
+            'user',
+            'comments' => fn($q) => $q->withAllRelations($userId),
+            'likes' => fn($query) => $query->where('user_id', $userId),
+            'category',
+        ]);
+
+        $video->loadCount([
+            'likes as likes_count' =>fn($q) => $q->where('vote', 1),
+            'likes as dislikes_count' =>fn($q) => $q->where('vote', -1),
+        ]);
+
         return view('videos.show.index', compact('video'));
     }
 
     public function edit(Video $video): View
     {
-        Gate::authorize('update', $video);
-
         $categories = Category::all();
         return view('videos.edit.index', compact('video', 'categories'));
     }
@@ -67,8 +78,15 @@ class VideoController extends Controller implements HasMiddleware
     public function update(UpdateVideoRequest $request, Video $video): RedirectResponse
     {
         $this->videoService->update($video, $request->all());
+        return success_redirect('back', 'update', 'video');
+    }
 
-        return success_redirect('back', 'update', 'ویدئو');
+    public function destroy(Video $video): RedirectResponse
+    {
+        Gate::authorize('delete', $video);
+
+        $video->forceDelete();
+        return success_redirect('index', 'delete', 'video');
     }
 }
 

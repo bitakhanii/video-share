@@ -10,15 +10,13 @@ use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller
 {
-    public function store(StoreCommentRequest $request, Video $video)
+    public function __invoke(StoreCommentRequest $request, Video $video)
     {
-        Gate::authorize('create', [Comment::class, $video]);
-
         $video->comments()->create([
             'user_id' => auth()->id(),
             'body' => $request->body,
         ]);
 
-        return success_redirect('videos.show', 'create', 'نظر شما', model: $video);
+        return success_redirect('videos.show', 'create', 'comment', model: $video);
     }
 }

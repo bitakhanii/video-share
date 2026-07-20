@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,15 +14,11 @@ class UserRegistered extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $first_name;
-    private $last_name;
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(public User $user)
     {
-        $this->first_name = 'shahla';
-        $this->last_name = 'minaei';
     }
 
     /**
@@ -41,7 +38,6 @@ class UserRegistered extends Mailable
     {
         return new Content(
             markdown: 'emails.user-registered',
-            with: ['name' => $this->first_name . ' ' . $this->last_name],
         );
     }
 

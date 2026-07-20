@@ -39,4 +39,16 @@ class Comment extends Model
     }
 
     /* End Accessor Methods */
+
+    public function scopeWithAllRelations($query, ?int $userId)
+    {
+        return $query->with([
+            'user',
+            'likes' => fn($q) => $q->where('user_id', $userId),
+        ])
+            ->withCount([
+                'likes as likes_count' => fn($q) => $q->where('vote', 1),
+                'likes as dislikes_count' => fn($q) => $q->where('vote', -1),
+            ]);
+    }
 }

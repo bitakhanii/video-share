@@ -4,29 +4,29 @@ namespace App\Services\Notification\Constants;
 
 use App\Mail\ForgetPassword;
 use App\Mail\UserRegistered;
-use App\Mail\VideoCreated;
 
 class EmailTypes
 {
     const USER_REGISTERED = 1;
-    const VIDEO_CREATED = 2;
-    const  FORGET_PASSWORD = 3;
+    const  FORGET_PASSWORD = 2;
 
-    public static function toString()
+    public static function toString(): array
     {
         return [
             self::USER_REGISTERED => 'ثبت نام کاربر',
-            self::VIDEO_CREATED => 'ساختن ویدئو',
             self::FORGET_PASSWORD => 'فراموشی رمز عبور',
         ];
     }
 
-    public static function toMail($type)
+    public static function toMail($type, $data)
     {
-        return [
-            self::USER_REGISTERED => UserRegistered::class,
-            self::VIDEO_CREATED => VideoCreated::class,
-            self::FORGET_PASSWORD => ForgetPassword::class,
-        ][$type];
+        try {
+            return [
+                self::USER_REGISTERED => new UserRegistered($data['user']),
+                self::FORGET_PASSWORD => new ForgetPassword($data['user']),
+            ][$type];
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
     }
 }

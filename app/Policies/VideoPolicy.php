@@ -43,9 +43,9 @@ class VideoPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Video $video): bool
+    public function delete(User $user, Video $video): Response
     {
-        return true;
+        return $video->user_id == $user->id ? Response::allow() : Response::deny('This video is not yours', 403);
     }
 
     /**

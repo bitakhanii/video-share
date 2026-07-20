@@ -51,4 +51,7 @@ return [
       'ffprobe_path' => env('FFPROBE_PATH'),
     ],
 
+    'sms' => [
+        'sms_api_key' => env('SMS_API_KEY'),
+    ],
 ];

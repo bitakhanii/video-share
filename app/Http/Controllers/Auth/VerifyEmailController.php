@@ -23,6 +23,6 @@ class VerifyEmailController extends Controller
             event(new Verified($request->user()));
         }
 
-        return success_redirect('dashboard', 'verify', 'ایمیل');
+        return success_redirect('dashboard', 'verify', 'email');
     }
 }

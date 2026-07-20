@@ -12,8 +12,8 @@ class SendEmail implements ShouldQueue
 {
     use Queueable;
 
-    private $user;
-    private $mailable;
+    private User $user;
+    private Mailable $mailable;
 
     /**
      * Create a new job instance.

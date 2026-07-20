@@ -28,39 +28,53 @@ use App\Http\Controllers\Topic\TopicController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [IndexController::class, 'index'])->name('index');
+Route::get('/', IndexController::class)
+    ->name('index');
 
-Route::get('videos/create', [VideoController::class, 'create'])->name('videos.create');
-Route::post('videos', [VideoController::class, 'store'])->name('videos.store');
-Route::get('videos/{video}', [VideoController::class, 'show'])->name('videos.show');
-Route::get('videos/{video}/edit', [VideoController::class, 'edit'])->name('videos.edit');
-Route::put('videos/{video}', [VideoController::class, 'update'])->name('videos.update');
+Route::get('search', SearchController::class)
+    ->name('videos.search');
 
-Route::get('categories/{category:slug}/videos', [CategoryVideoController::class, 'index'])->name('categories.videos.index');
+Route::resource('videos', VideoController::class)
+    ->except(['index']);
 
-Route::get('/search', [SearchController::class, 'index'])->name('videos.search');
+Route::get('categories/{category:slug}/videos', CategoryVideoController::class)
+    ->name('categories.videos.index');
 
+Route::get('{likeable_type}/{likeable_id}/like', LikeController::class)
+    ->name('likes.store');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('{likeable_type}/{likeable_id}/dislike', DislikeController::class)
+    ->name('dislikes.store');
 
 Route::middleware('auth')->group(function () {
-    Route::post('videos/{video}/comments', [CommentController::class, 'store'])->middleware('auth')
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    Route::post('videos/{video}/comments', CommentController::class)
         ->name('comments.store');
 
-    Route::get('{likeable_type}/{likeable_id}/like', [LikeController::class, 'store'])
-        ->name('likes.store');
-    Route::get('{likeable_type}/{likeable_id}/dislike', [DislikeController::class, 'store'])
-        ->name('dislikes.store');
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])
+            ->name('edit');
+        Route::patch('/', [ProfileController::class, 'update'])
+            ->name('update');
+        Route::delete('/', [ProfileController::class, 'destroy'])
+            ->name('destroy');
+    });
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('notification/email', [NotificationController::class, 'email'])->name('notification.email');
-    Route::post('notification/email', [NotificationController::class, 'sendEmail'])->name('notification.email.send');
-    Route::get('notification/sms', [NotificationController::class, 'sms'])->name('notification.sms');
-    Route::post('notification/sms', [NotificationController::class, 'sendSms'])->name('notification.sms.send');
+    Route::prefix('notification')->name('notification.')->group(function () {
+        Route::get('/email', [NotificationController::class, 'email'])
+            ->name('email');
+        Route::post('/email', [NotificationController::class, 'sendEmail'])
+            ->name('email.send');
+        Route::get('/sms', [NotificationController::class, 'sms'])
+            ->name('sms');
+        Route::post('/sms', [NotificationController::class, 'sendSms'])
+            ->name('sms.send');
+    });
+
     Route::post('coupon/apply', [CouponController::class, 'apply'])->name('coupon.apply');
     Route::get('coupon/remove', [CouponController::class, 'remove'])->name('coupon.remove');
     Route::get('orders', [OrderController::class, 'index'])->name('orders.index');

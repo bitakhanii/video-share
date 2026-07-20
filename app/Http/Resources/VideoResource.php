@@ -16,6 +16,7 @@ class VideoResource extends JsonResource
     {
         return [
             'name' => $this->name,
+            'length' => $this->length,
             'user' => new UserResource($this->user),
         ];
     }

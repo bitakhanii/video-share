@@ -41,6 +41,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 'message' => 'Page not found.',
             ], 404);
         });
+
         /*$exceptions->reportable(function (\App\Exceptions\InvalidTypeException $e) {
             //abort(404);
         });

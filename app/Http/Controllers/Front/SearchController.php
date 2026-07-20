@@ -7,7 +7,7 @@ use App\Models\Video;
 
 class SearchController extends Controller
 {
-    public function index()
+    public function __invoke()
     {
         $videos = Video::with(['user', 'category'])
             ->filter(request()->all())

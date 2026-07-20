@@ -9,7 +9,7 @@ use App\Listeners\ChangeTicketStatus;
 use App\Listeners\CreateThumbnail;
 use App\Listeners\ProcessVideo;
 use App\Listeners\SendEmail;
-use App\Listeners\SendVerificationEmail;
+use App\Listeners\SendWelcomeMailListener;
 use App\Models\Comment;
 use App\Models\Topic\Reply;
 use App\Models\Topic\Topic;
@@ -62,8 +62,9 @@ class AppServiceProvider extends ServiceProvider
 
         Event::listen(
             UserRegistered::class,
-            SendVerificationEmail::class,
+            SendWelcomeMailListener::class,
         );
+
 
         Event::listen(
             TicketReplid::class,
@@ -71,7 +72,7 @@ class AppServiceProvider extends ServiceProvider
         );
 
         Route::bind('likeable_id', function ($value, $route) {
-            $model_name = 'App\\Models\\'. ucfirst($route->parameters['likeable_type']);
+            $model_name = 'App\\Models\\' . ucfirst($route->parameters['likeable_type']);
             $routeKey = (new $model_name)->getRouteKeyName();
             return $model_name::where($routeKey, $value)->firstOrFail();
             // equals: (↑ and ↓)
@@ -86,7 +87,8 @@ class AppServiceProvider extends ServiceProvider
         Reply::observe(ReplyObserver::class);
         UserStat::observe(UserStatObserver::class);
 
-        Gate::policy(Video::class, VideoPolicy::class);
+
+        Gate::policy(Video::class, VideoPolicy::class); // Optional
 
         /*Gate::define('edit-video', function (User $user, Video $video) {
             return $user->id == $video->user_id;
@@ -105,3 +107,19 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

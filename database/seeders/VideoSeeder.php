@@ -13,9 +13,9 @@ class VideoSeeder extends Seeder
      */
     public function run(): void
     {
-        $base = now()->subMonths(6);
+        $base = now()->subMonths(7);
 
-        foreach (range(1, 30) as $number) {
+        foreach (range(1, 2) as $number) {
 
             $base = $base->copy()->addDays(rand(1, 11));
             $createdAt = $base;

@@ -13,24 +13,6 @@ trait Likeable
         return $this->morphMany(Like::class, 'likeable');
     }
 
-    public function getLikesCountAttribute(): int
-    {
-        return Cache::remember(
-            $this->cacheKey('likes'),
-            3600,
-            fn() => $this->likes()->where('vote', 1)->count()
-        );
-    }
-
-    public function getDislikesCountAttribute(): int
-    {
-        return Cache::remember(
-            $this->cacheKey('dislikes'),
-            3600,
-            fn() => $this->likes()->where('vote', -1)->count()
-        );
-    }
-
     public function likedBy(User $user): string
     {
         return $this->applyVote($user, 1);
@@ -41,20 +23,30 @@ trait Likeable
         return $this->applyVote($user, -1);
     }
 
-    public function isLikedBy(User $user): bool
+    public function isLikedBy(?User $user): bool
     {
         return $this->getUserVote($user) === 1;
     }
 
-    public function isDislikedBy(User $user): bool
+    public function isDislikedBy(?User $user): bool
     {
         return $this->getUserVote($user) === -1;
     }
 
     // ─────────── Private Helpers ─────────────
 
-    private function getUserVote(User $user): ?int
+    private function getUserVote(?User $user): ?int
     {
+        if (! $user) {
+            return null;
+        }
+
+        if ($this->relationLoaded('likes')) {
+            return $this->likes
+                ->where('user_id', $user->id)
+                ->first()?->vote;
+        }
+
         return $this->likes()
             ->where('user_id', $user->id)
             ->value('vote');
@@ -81,8 +73,28 @@ trait Likeable
             $status = 'added';
         }
 
-        $this->forgetLikeCache();
+        //$this->forgetLikeCache();
         return $status;
+    }
+
+
+    // If you want to use Cache for store likes count
+    /*public function getLikesCountAttribute(): int
+    {
+        return Cache::remember(
+            $this->cacheKey('likes'),
+            3600,
+            fn() => $this->likes()->where('vote', 1)->count()
+        );
+    }
+
+    public function getDislikesCountAttribute(): int
+    {
+        return Cache::remember(
+            $this->cacheKey('dislikes'),
+            3600,
+            fn() => $this->likes()->where('vote', -1)->count()
+        );
     }
 
     private function cacheKey(string $type): string
@@ -94,5 +106,5 @@ trait Likeable
     {
         Cache::forget($this->cacheKey('likes'));
         Cache::forget($this->cacheKey('dislikes'));
-    }
+    }*/
 }

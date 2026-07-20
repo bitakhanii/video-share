@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class CategoryVideoController extends Controller
 {
-    public function index(Request $request, Category $category): View
+    public function __invoke(Request $request, Category $category): View
     {
         $title = $category->name;
         $videos = $category->videos()

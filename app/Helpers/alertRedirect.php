@@ -15,7 +15,7 @@ if (!function_exists('alert_redirect')) {
         string $button = 'باشه',
         int    $autoClose = 3000): RedirectResponse
     {
-        Alert::$type(__($message, ['attribute' => $attribute]))
+        Alert::$type(__($message, ['attribute' => __('attributes.' . $attribute)]))
             ->showConfirmButton($button)
             ->autoClose($autoClose);
 
@@ -73,22 +73,30 @@ if (!function_exists('info_redirect')) {
 }
 
 if (!function_exists('json_redirect')) {
-    function json_redirect($message, $attribute, $data = [], $icon = 'success', $autoClose = 1500):
+    function json_redirect($message, $attribute, $status = 200, $data = [], $icon = 'success', $autoClose = 1500):
     JsonResponse
     {
         return response()->json([
-            'message' => __($message, ['attribute' => $attribute]),
+            'message' => __($message, ['attribute' => __('attributes.' . $attribute)]),
             'data' => $data,
             'icon' => $icon,
             'autoClose' => $autoClose,
-        ]);
+        ], $status);
     }
 }
 
 if (!function_exists('json_success_redirect')) {
-    function json_success_redirect($message, $attribute, $data = [], $autoClose = 1500):
+    function json_success_redirect($message, $attribute, $status = 200, $data = [], $autoClose = 1500):
     JsonResponse
     {
-        return json_redirect('alerts.success.' . $message, $attribute, $data, 'success', $autoClose);
+        return json_redirect('alerts.success.' . $message, $attribute, $status, $data, 'success', $autoClose);
+    }
+}
+
+if (!function_exists('json_error_redirect')) {
+    function json_error_redirect($message, $attribute, $status = 200, $data = [], $autoClose = 1500):
+    JsonResponse
+    {
+        return json_redirect('alerts.error.' . $message, $attribute, $status, $data, 'error', $autoClose);
     }
 }

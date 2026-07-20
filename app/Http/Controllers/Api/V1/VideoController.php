@@ -5,16 +5,24 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreVideoRequest;
 use App\Http\Requests\UpdateVideoRequest;
-use App\Http\Resources\VideoCollection;
 use App\Http\Resources\VideoResource;
 use App\Models\User;
 use App\Models\Video;
 use App\Services\VideoService;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Gate;
 
-class VideoController extends Controller
+class VideoController extends Controller implements HasMiddleware
 {
+    public static function middleware()
+    {
+        return [
+            new Middleware('auth:sanctum', only: ['store', 'update', 'destroy']),
+        ];
+    }
+
     public function show(Video $video)
     {
         return new VideoResource($video);
@@ -22,21 +30,22 @@ class VideoController extends Controller
 
     public function index(Request $request)
     {
-        $videos = Video::filter($request->all())->paginate();
+        $videos = Video::filter($request->all())->paginate(10);
         return VideoResource::collection($videos);
     }
 
     public function store(StoreVideoRequest $request)
     {
         (new VideoService)->store(auth()->user(), $request->all());
-        return response()->json('ویدئو با موفقیت ایجاد شد!', 201);
+        return json_success_redirect('create', 'video', 201);
     }
 
     public function update(UpdateVideoRequest $request, Video $video)
     {
         Gate::authorize('update', $video);
+
         (new VideoService)->update($video, $request->all());
-        return response()->json('ویدئو با موفقیت ویرایش شد.', 200);
+        return json_success_redirect('update', 'video');
     }
 
     public function destroy(Video $video)
@@ -44,6 +53,6 @@ class VideoController extends Controller
         Gate::authorize('delete', $video);
 
         $video->forceDelete();
-        return response()->json('ویدئو با موفقیت حذف گردید.');
+        return json_success_redirect('delete', 'video');
     }
 }

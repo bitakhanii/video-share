@@ -36,17 +36,23 @@
         @endforeach
     </ul>
 
+    <h3 class="post-box-title">ارسال نظرات</h3>
     @auth
-        <h3 class="post-box-title">ارسال نظرات</h3>
-        <x-validation-errors></x-validation-errors>
-        <form action="{{ route('comments.store', $video) }}"
-              method="POST"
-              id="comment-form">
-            @csrf
-            <textarea class="form-control" name="body" rows="8" id="Message"
-                      placeholder="متن پیام">{{ old('body') }}</textarea>
-            <button id="contact_submit" class="btn btn-dm">ارسال پیام</button>
-        </form>
+        @can('create', [\App\Models\Comment::class, $video])
+            <x-validation-errors></x-validation-errors>
+            <form action="{{ route('comments.store', $video) }}"
+                  method="POST"
+                  id="comment-form">
+                @csrf
+                <textarea class="form-control" name="body" rows="8" id="Message"
+                          placeholder="متن پیام">{{ old('body') }}</textarea>
+                <button id="contact_submit" class="btn btn-dm">ارسال پیام</button>
+            </form>
+        @else
+            <div class="alert alert-warning">
+                مالک ویدئو نمی‌تواند برای ویدئوی خود دیدگاهی وارد نماید !
+            </div>
+        @endcan
     @endauth
 
     @guest

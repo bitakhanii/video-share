@@ -20,8 +20,8 @@ class SendVerificationEmail
     /**
      * Handle the event.
      */
-    public function handle(UserRegistered $event): void
+    public function handle(/*UserRegistered $event*/): void
     {
-        $event->user->sendEmailVerificationNotification();
+        //$event->user->sendEmailVerificationNotification();
     }
 }

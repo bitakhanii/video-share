@@ -15,7 +15,7 @@
             @endcan
             <a class="channel-name" href="#">{{ $video->owner_name }}<span>
                                     <i class="fa fa-check-circle"></i></span></a>
-            <span class="views"><i class="fa fa-eye"></i>2.8M بازدید </span>
+            <span class="views"><i class="fa fa-eye"></i>{{ number_format($video->views) }} بازدید </span>
             <span class="date"><i class="fa fa-clock-o"></i>{{ $video->created_at }}</span>
             @if($video->category_name)
                 <span class="category d-block"><i class="fa fa-tag"></i>{{ $video->category_name
