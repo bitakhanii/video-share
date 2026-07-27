@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class TwoFactorAuthentication
 {
-    protected $request;
+    protected Request $request;
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -19,7 +19,7 @@ class TwoFactorAuthentication
     const ACTIVATED = 'activated';
     const INVALID_CODE = 'invalid-code';
 
-    public function requestCode($user)
+    public function requestCode(User $user): string
     {
         $code = TwoFactorAuth::generateCode($user);
         $code->send();
@@ -27,7 +27,7 @@ class TwoFactorAuthentication
         return static::CODE_SENT;
     }
 
-    public function activate()
+    public function activate(): string
     {
         if (!$this->isValidCode()) return self::INVALID_CODE;
 
@@ -37,9 +37,8 @@ class TwoFactorAuthentication
         return self::ACTIVATED;
     }
 
-    public function deactivate()
+    public function deactivate(User $user): void
     {
-        $user = auth()->user();
         $user->makeHasTwoFactorAuthFalse();
     }
 
@@ -48,22 +47,23 @@ class TwoFactorAuthentication
         if (!$this->isValidCode()) return self::INVALID_CODE;
 
         $this->getCode()->delete();
+
         Auth::login($this->getUser(), session('remember'));
 
         $this->forgetSession();
     }
 
-    public function resent()
+    public function resent(): void
     {
         $this->requestCode($this->getUser());
     }
 
-    protected function isValidCode()
+    protected function isValidCode(): bool
     {
         return !$this->getCode()->isExpired() && $this->getCode()->isEqualsWith($this->request->code);
     }
 
-    protected function setSession($code)
+    protected function setSession($code): void
     {
         session([
             'code_id' => $code->id,
@@ -71,17 +71,17 @@ class TwoFactorAuthentication
         ]);
     }
 
-    protected function forgetSession()
+    protected function forgetSession(): void
     {
         session()->forget(['user_id', 'code_id', 'remember']);
     }
 
-    protected function getCode()
+    protected function getCode(): TwoFactorAuth|null
     {
         return $this->code ?? TwoFactorAuth::query()->where('id', '=', session('code_id'))->first();
     }
 
-    protected function getUser()
+    protected function getUser(): ?User
     {
         return User::query()->where('id', '=', session('user_id'))->first();
     }

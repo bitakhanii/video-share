@@ -3,14 +3,14 @@
 namespace App\Listeners;
 
 use App\Events\UserRegistered;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\SentMessage;
 use Illuminate\Support\Facades\Mail;
 
-class SendWelcomeMailListener
+class SendWelcomeMailListener implements ShouldQueue
 {
-    public function __construct()
-    {
-    }
+    use Queueable;
 
     public function handle(UserRegistered $event): void
     {

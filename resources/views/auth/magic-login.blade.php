@@ -9,7 +9,7 @@
 
         <div class="form-output">
             <x-validation-errors></x-validation-errors>
-            <form method="POST" action="{{ route('login.magic.store') }}">
+            <form method="POST" action="{{ route('magic-login.store') }}">
                 @csrf
                 <div class="form-group label-floating">
                     <label class="control-label">ایمیل</label>

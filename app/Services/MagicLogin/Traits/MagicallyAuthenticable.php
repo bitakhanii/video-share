@@ -3,14 +3,18 @@
 namespace App\Services\MagicLogin\Traits;
 
 use App\Models\LoginToken;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
-Trait MagicallyAuthenticable
+trait MagicallyAuthenticable
 {
-    public function loginToken()
+    /* Relation Methods */
+    public function loginToken(): HasOne
     {
         return $this->hasOne(LoginToken::class);
     }
+
+    /* End Relation Methods */
 
     public function generateToken()
     {

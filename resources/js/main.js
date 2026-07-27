@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 window.Swal = Swal;
 
 import './bootstrap.js';
+import './bfcache-reload..js';
 import './jquery.sticky-kit.min';
 import './app';
 import './csrf-token';

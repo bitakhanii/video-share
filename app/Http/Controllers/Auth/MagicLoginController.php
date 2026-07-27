@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class MagicLoginController extends Controller
 {
-    protected $auth;
+    protected MagicAuthentication $auth;
 
     public function __construct(MagicAuthentication $auth)
     {
@@ -25,23 +25,19 @@ class MagicLoginController extends Controller
     {
         $this->validateRequest($request);
         $this->auth->requestLink();
-        return back()->with([
-            'alert' => __('alerts.success.send', ['attribute' => 'ایمیل']),
-            'alert-type' => 'success',
-        ]);
+        return success_redirect('back', 'send', 'email');
     }
 
     public function login(LoginToken $token)
     {
-        return $this->auth->authenticate($token) == $this->auth::AUTHENTICATED
-            ? redirect()->route('index')
-            : redirect()->route('login.magic.create')->with([
-                'alert' => __('alerts.danger.invalid', ['attribute' => 'لینک']),
-                'alert-type' => 'danger',
-            ]);
+        return match ($this->auth->authenticate($token)) {
+            $this->auth::AUTHENTICATED => success_redirect('index', 'welcome'),
+            $this->auth::REQUIRES_TWO_FACTOR => redirect()->route('login.two-factor-auth.form'),
+            default => error_redirect('magic-login.create', 'invalid', 'link'),
+        };
     }
 
-    private function validateRequest($request)
+    private function validateRequest($request): void
     {
         $request->validate([
             'email' => ['required', 'email', 'exists:users,email'],

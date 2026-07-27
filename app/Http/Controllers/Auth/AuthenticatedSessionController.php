@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\TwoFactorAuthRequest;
+use App\Services\TwoFactorAuth\Traits\InteractsWithTwoFactorAuth;
 use App\Services\TwoFactorAuth\TwoFactorAuthentication;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,6 +17,15 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
+    use InteractsWithTwoFactorAuth;
+
+    protected TwoFactorAuthentication $twoFactorAuth;
+
+    public function __construct(TwoFactorAuthentication $twoFactorAuth)
+    {
+        $this->twoFactorAuth = $twoFactorAuth;
+    }
+
     /**
      * Display the login view.
      */
@@ -29,7 +38,7 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      * @throws ValidationException
      */
-    public function store(LoginRequest $request, TwoFactorAuthentication $auth): RedirectResponse
+    public function store(LoginRequest $request): RedirectResponse
     {
         $user = $request->authenticate();
 
@@ -37,9 +46,8 @@ class AuthenticatedSessionController extends Controller
             'remember' => $request->remember,
         ]);
 
-        if ($user->hasTwoFactorAuth()) {
-            $auth->requestCode($user);
-            return $this->sendTwoFactorAuthResponse();
+        if ($this->requiresTwoFactorChallenge($user)) {
+            return redirect()->route('login.two-factor-auth.form');
         }
 
         Auth::login($user, $request->remember);
@@ -61,10 +69,5 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return success_redirect('index', 'logout');
-    }
-
-    protected function sendTwoFactorAuthResponse()
-    {
-        return redirect()->route('login.two-factor-auth.form');
     }
 }

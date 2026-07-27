@@ -13,11 +13,11 @@ class TwoFactorAuth extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $code;
+    protected string $code;
     /**
      * Create a new message instance.
      */
-    public function __construct($code)
+    public function __construct(string $code)
     {
         $this->code = $code;
     }

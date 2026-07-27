@@ -99,4 +99,4 @@ Route::get('temporary-route', function () {
 
 Route::get('bita', function () {
     dd('bita');
-})->name('bit')->middleware('verify-email');
+})->name('bit')->middleware(['auth', 'verify-email']);

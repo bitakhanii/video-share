@@ -46,13 +46,13 @@ Route::middleware('guest')->group(function () {
         ->name('provider.callback');
 
     Route::get('login/magic', [MagicLoginController::class, 'create'])
-        ->name('login.magic.create');
+        ->name('magic-login.create');
 
     Route::post('login/magic', [MagicLoginController::class, 'store'])
-        ->name('login.magic.store');
+        ->name('magic-login.store');
 
     Route::get('login/magic/{token}', [MagicLoginController::class, 'login'])
-        ->name('login.magic.login');
+        ->name('magic-login.login');
 
     Route::get('login/two-factor-auth', [TwoFactorAuthController::class, 'loginForm'])
         ->name('login.two-factor-auth.form');

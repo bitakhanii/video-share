@@ -60,11 +60,10 @@ class AppServiceProvider extends ServiceProvider
         // Paginator::useBootstrapFive();
         Paginator::useBootstrap();
 
-        Event::listen(
+        /*Event::listen(
             UserRegistered::class,
             SendWelcomeMailListener::class,
-        );
-
+        );*/
 
         Event::listen(
             TicketReplid::class,

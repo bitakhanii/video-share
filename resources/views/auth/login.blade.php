@@ -12,7 +12,7 @@
         </div>
 
         <div class="text-left" style="margin: 5px 0 0 5px;">
-            <a class="btn btn-sm btn-warning" href="{{ route('login.magic.create') }}">
+            <a class="btn btn-sm btn-warning" href="{{ route('magic-login.create') }}">
                 ورود بدون رمزعبور
             </a>
         </div>

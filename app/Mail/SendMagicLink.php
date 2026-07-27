@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\LoginToken;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,12 +14,13 @@ class SendMagicLink extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    protected $token;
-    protected $options;
+    protected LoginToken $token;
+    protected array $options;
+
     /**
      * Create a new message instance.
      */
-    public function __construct($token, $options)
+    public function __construct(LoginToken $token, array $options)
     {
         $this->token = $token;
         $this->options = $options;
@@ -55,8 +57,10 @@ class SendMagicLink extends Mailable implements ShouldQueue
         return [];
     }
 
-    protected function createLink()
+    protected function createLink(): string
     {
-        return route('login.magic.login', ['token' => $this->token->token] + $this->options);
+        return route('magic-login.login', [
+                'token' => $this->token->token
+            ] + $this->options);
     }
 }

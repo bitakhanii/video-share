@@ -19,12 +19,12 @@ class ClearLoginTokens extends Command
      *
      * @var string
      */
-    protected $description = 'Clear all login tokens.';
+    protected $description = 'Clear all expired login tokens.';
 
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         LoginToken::expired()->delete();
 

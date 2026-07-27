@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\TwoFactorAuthRequest;
 use App\Services\TwoFactorAuth\TwoFactorAuthentication;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
+use Illuminate\Validation\ValidationException;
 
 class TwoFactorAuthController extends Controller
 {
-    protected $auth;
+    protected TwoFactorAuthentication $auth;
 
     public function __construct(TwoFactorAuthentication $auth)
     {
@@ -22,17 +25,11 @@ class TwoFactorAuthController extends Controller
         return view('auth.two-factor-auth.index');
     }
 
-    public function sendCode()
+    public function sendCode(): RedirectResponse
     {
         return $this->auth->requestCode(Auth::user()) == $this->auth::CODE_SENT
-            ? redirect()->route('two-factor-auth.enter-code')->with([
-                'alert' => __('alerts.success.send', ['attribute' => 'کد احرازهویت']),
-                'alert-type' => 'success',
-            ])
-            : back()->with([
-                'alert' => __('alerts.danger.problem'),
-                'alert-type' => 'danger',
-            ]);
+            ? success_redirect('two-factor-auth.enter-code', 'send', 'code')
+            : error_redirect('back', 'problem');
     }
 
     public function enterCode()
@@ -40,35 +37,23 @@ class TwoFactorAuthController extends Controller
         return view('auth.two-factor-auth.enter-code');
     }
 
-    public function activate(TwoFactorAuthRequest $request)
+    public function activate(TwoFactorAuthRequest $request): RedirectResponse
     {
         return $this->auth->activate($request->code) == $this->auth::ACTIVATED
-            ? redirect()->route('index')->with([
-                'alert' => __('alerts.success.activate', ['attribute' => 'احراز هویت دومرحله‌ای']),
-                'alert-type' => 'success',
-            ])
-            : redirect()->route('two-factor-auth.index')->with([
-                'alert' => __('alerts.danger.invalid', ['attribute' => 'کد وارد شده']),
-                'alert-type' => 'danger',
-            ]);
+            ? success_redirect('index', 'activate', '2fa')
+            : error_redirect('back', 'invalid', 'code');
     }
 
-    public function deactivate()
+    public function deactivate(): RedirectResponse
     {
-        $this->auth->deactivate();
-        return redirect()->route('index')->with([
-            'alert' => __('alerts.success.deactivate', ['attribute' => 'احرازهویت دومرحله‌ای']),
-            'alert-type' => 'success',
-        ]);
+        $this->auth->deactivate(auth()->user());
+        return success_redirect('index', 'deactivate', '2fa');
     }
 
-    public function resent()
+    public function resent(): RedirectResponse
     {
         $this->auth->resent();
-        return back()->with([
-            'alert' => __('alerts.success.send', ['attribute' => 'کد احراز هویت مجددا']),
-            'alert-type' => 'success',
-        ]);
+        return success_redirect('back', 'send', 'code');
     }
 
     public function loginForm()
@@ -76,16 +61,10 @@ class TwoFactorAuthController extends Controller
         return view('auth.two-factor-auth.login');
     }
 
-    public function login(TwoFactorAuthRequest $request)
+    public function login(TwoFactorAuthRequest $request): RedirectResponse
     {
         return $this->auth->login() == $this->auth::INVALID_CODE
-            ? back()->with([
-                'alert' => __('alerts.danger.invalid', ['attribute' => 'کد وارد شده']),
-                'alert-type' => 'danger',
-            ])
-            :redirect()->route('index')->with([
-                'alert' => __('alerts.success.welcome'),
-                'alert-type' => 'success',
-            ]);
+            ? error_redirect('back', 'invalid', 'code')
+            : success_redirect('index', 'welcome');
     }
 }

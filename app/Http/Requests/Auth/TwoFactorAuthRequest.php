@@ -3,6 +3,9 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class TwoFactorAuthRequest extends FormRequest
 {
@@ -26,10 +29,27 @@ class TwoFactorAuthRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'code.digits' => 'کد وارد شده نامعتبر است.'
         ];
+    }
+
+    protected function failedValidation(Validator $validator): void
+    {
+        $failed = $validator->failed();
+
+        if (isset($failed['code']['Digits'])) {
+            Alert::error(__('کد نامعتبر است.'))
+                ->showConfirmButton('باشه')
+                ->autoClose(3000);
+
+            throw new HttpResponseException(
+                redirect()->back()
+            );
+        }
+
+        parent::failedValidation($validator);
     }
 }

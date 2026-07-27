@@ -31,11 +31,11 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
-            //'g-recaptcha-response' => ['required', new Recaptcha],
+            'g-recaptcha-response' => ['required', new Recaptcha],
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'g-recaptcha-response.required' => 'تیک "من ربات نیستم" را بزنید.'
@@ -47,7 +47,7 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate()
+    public function authenticate(): ?User
     {
         $this->ensureIsNotRateLimited();
 
@@ -60,16 +60,6 @@ class LoginRequest extends FormRequest
         }
 
         return $this->getCurrentUser();
-
-        /*if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
-            ]);
-        }
-
-        RateLimiter::clear($this->throttleKey());*/
     }
 
     /**
@@ -108,7 +98,7 @@ class LoginRequest extends FormRequest
         return Auth::validate($this->only('email', 'password'));
     }
 
-    protected function getCurrentUser()
+    protected function getCurrentUser(): ?User
     {
         return User::query()->where('email', '=', $this->email)->first();
     }

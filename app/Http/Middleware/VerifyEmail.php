@@ -16,7 +16,9 @@ class VerifyEmail
     public function handle(Request $request, Closure $next): Response
     {
         if (!auth()->user()->hasVerifiedEmail()) {
-            return redirect()->route('index')->with(['alert' => __('alerts.danger.verify'), 'alert-type' => 'danger']);
+            return info_redirect('index', 'verify-email');
         }
+
+        return $next($request);
     }
 }

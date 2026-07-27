@@ -1,27 +1,31 @@
 <?php
+
 namespace App\Services\TwoFactorAuth\Traits;
 
 use App\Models\TwoFactorAuth;
 
-Trait HasTwoFactorAuth
+trait HasTwoFactorAuth
 {
+    /* Relations Methods */
     public function twoFactorAuth()
     {
         return $this->hasOne(TwoFactorAuth::class);
     }
 
-    public function hasTwoFactorAuth()
+    /* End Relations Methods */
+
+    public function hasTwoFactorAuth(): bool
     {
         return $this->has_2fa;
     }
 
-    public function makeHasTwoFactorAuthTrue()
+    public function makeHasTwoFactorAuthTrue(): void
     {
         $this->has_2fa = true;
         $this->save();
     }
 
-    public function makeHasTwoFactorAuthFalse()
+    public function makeHasTwoFactorAuthFalse(): void
     {
         $this->has_2fa = false;
         $this->save();

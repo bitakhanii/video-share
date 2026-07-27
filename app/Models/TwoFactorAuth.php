@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Jobs\SendEmail;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TwoFactorAuth extends Model
 {
@@ -21,22 +22,25 @@ class TwoFactorAuth extends Model
         ]);
     }
 
-    public function user()
+    /* Relations Methods */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function send()
+    /* End Relations Methods */
+
+    public function send(): void
     {
         SendEmail::dispatch($this->user, new \App\Mail\TwoFactorAuth($this->code));
     }
 
-    public function isExpired()
+    public function isExpired(): bool
     {
         return $this->created_at->diffInSeconds(now()) > 60;
     }
 
-    public function isEqualsWith($code)
+    public function isEqualsWith($code): bool
     {
         return $this->code == $code;
     }

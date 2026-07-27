@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -21,7 +20,7 @@ class EmailVerificationNotificationController extends Controller
         }
 
         $request->user()->sendEmailVerificationNotification();
-        
-        return back()->with(['alert' => __('alerts.success.send', ['attribute' => 'ایمیل تأیید']), 'alert-type' => 'success']);
+
+        return success_redirect('back', 'send', 'verification-email');
     }
 }
