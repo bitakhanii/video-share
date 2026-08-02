@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('gateway')->nullable();
             $table->string('ref_num')->nullable();
             $table->integer('amount');
-            $table->tinyInteger('status')->comment('Compelete: 1 , Incomplete: 0');
+            $table->tinyInteger('status')->comment('Complete: 1 , Incomplete: 0');
             $table->timestamps();
         });
     }

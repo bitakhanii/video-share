@@ -6,14 +6,12 @@ use App\Support\Cost\Contracts\AbstractCost;
 
 class PackCost extends AbstractCost
 {
-    const PACK_COST = 10000;
-
-    public function getCost()
+    public function getCost(): int
     {
-        return self::PACK_COST;
+        return config('settings.packingCost');
     }
 
-    public function persianDescription()
+    public function persianDescription(): string
     {
         return 'هزینه بسته‌بندی';
     }

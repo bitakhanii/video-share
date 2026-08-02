@@ -3,37 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Support\Payment\Transaction;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
-    private $transaction;
+    private Transaction $transaction;
 
     public function __construct(Transaction $transaction)
     {
         $this->transaction = $transaction;
     }
 
-    public function verify()
+    public function verify(): RedirectResponse
     {
         return $this->transaction->verify()
             ? $this->sendSuccessResponse()
             : $this->sendFailedResponse();
     }
 
-    private function sendFailedResponse()
+    private function sendFailedResponse(): RedirectResponse
     {
-        return redirect()->route('products.index')->with([
-            'alert' => __('alerts.danger.pay'),
-            'alert-type' => 'danger',
-        ]);
+        return error_redirect('products.index', 'pay');
     }
 
-    private function sendSuccessResponse()
+    private function sendSuccessResponse(): RedirectResponse
     {
-        return redirect()->route('index')->with([
-            'alert' => __('alerts.success.pay', ['attribute' => ' سفارش شما']),
-            'alert-type' => 'success',
-        ]);
+        return success_redirect('index', 'pay', 'order');
     }
 }

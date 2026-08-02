@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Browsershot\Browsershot;
 
@@ -14,20 +17,23 @@ class Order extends Model
         'code',
     ];
 
-    public function products()
+    /* Relation Methods */
+    public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class)->withPivot('quantity');
     }
 
-    public function payment()
+    public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
+
+    /* End Relation Methods */
 
     public function generateInvoice()
     {

@@ -1,13 +1,19 @@
-<ul class="like video-like-container">
-    <li><a class="deslike dislike-resource" data-id="{{ $video->slug }}" data-resource="video"
+<ul class="like video-like-container list-unstyled d-flex gap-2 m-0">
+    <li>
+        <a class="deslike dislike-resource btn btn-outline-secondary btn-sm rounded-pill"
+           data-id="{{ $video->slug }}" data-resource="video"
            style="color: @if($video->isDislikedBy(auth()->user())) #e0001c @endif" href="#">
-            <span style="margin-left: 5px;">{{ $video->dislikes_count }}</span>
+            <span class="me-1">{{ $video->dislikes_count }}</span>
             <i class="fa fa-thumbs-down"></i>
-        </a></li>
+        </a>
+    </li>
 
-    <li><a class="like like-resource" data-id="{{ $video->slug }}" data-resource="video"
+    <li>
+        <a class="like like-resource btn btn-outline-secondary btn-sm rounded-pill"
+           data-id="{{ $video->slug }}" data-resource="video"
            style="color: @if($video->isLikedBy(auth()->user())) #1b87ff @endif" href="#">
-            <span style="margin-left: 5px;">{{ $video->likes_count }}</span>
+            <span class="me-1">{{ $video->likes_count }}</span>
             <i class="fa fa-thumbs-up"></i>
-        </a></li>
+        </a>
+    </li>
 </ul>

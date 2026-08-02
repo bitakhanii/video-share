@@ -7,14 +7,12 @@ use App\Support\Cost\Contracts\CostInterface;
 
 class ShippingCost extends AbstractCost
 {
-    const SHIPPING_COST = 50000;
-
-    public function getCost()
+    public function getCost(): int
     {
-        return self::SHIPPING_COST;
+        return config('settings.shippingCost');
     }
 
-    public function persianDescription()
+    public function persianDescription(): string
     {
         return 'هزینه حمل و نقل';
     }

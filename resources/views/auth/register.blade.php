@@ -1,47 +1,48 @@
 @extends('auth-layout')
 @section('body-class', 'sing-up-page')
 @section('content')
-    <div id="log-in" class="site-form log-in-form">
+    <div class="container">
+        <div id="log-in" class="site-form log-in-form">
 
-        <div id="log-in-head">
-            <h1>ثبت نام</h1>
-            <div id="logo"><a href="{{ route('index') }}"><img src="img/logo.png" alt=""></a></div>
-        </div>
+            <div id="log-in-head">
+                <h1>ثبت نام</h1>
+                <div id="logo"><a href="{{ route('index') }}"><img src="img/logo.png" alt=""></a></div>
+            </div>
 
-        <div class="form-output">
-            <x-alerts></x-alerts>
-            <x-validation-errors></x-validation-errors>
-            <form method="POST" action="{{ route('register.store') }}">
-                @csrf
-                <div class="form-group label-floating">
-                    <label class="control-label">@lang('labels.name')</label>
-                    <input class="form-control" name="name" type="text" value="{{ old('name') }}">
-                </div>
-                <div class="form-group label-floating">
-                    <label class="control-label">@lang('labels.email')</label>
-                    <input class="form-control" name="email" type="email" value="{{ old('email') }}">
-                </div>
-                <div class="form-group label-floating">
-                    <label class="control-label">@lang('labels.phone_number')</label>
-                    <input class="form-control" name="phone_number" type="text" value="{{ old('phone_number') }}">
-                </div>
-                <div class="form-group label-floating">
-                    <label class="control-label">@lang('labels.password')</label>
-                    <input class="form-control" name="password" type="password">
-                </div>
+            <div class="form-output">
+                <x-alerts></x-alerts>
+                <x-validation-errors></x-validation-errors>
+                <form method="POST" action="{{ route('register.store') }}">
+                    @csrf
+                    <div class="form-group label-floating">
+                        <label class="control-label">@lang('labels.name')</label>
+                        <input class="form-control" name="name" type="text" value="{{ old('name') }}">
+                    </div>
+                    <div class="form-group label-floating">
+                        <label class="control-label">@lang('labels.email')</label>
+                        <input class="form-control" name="email" type="email" value="{{ old('email') }}">
+                    </div>
+                    <div class="form-group label-floating">
+                        <label class="control-label">@lang('labels.phone_number')</label>
+                        <input class="form-control" name="phone_number" type="text" value="{{ old('phone_number') }}">
+                    </div>
+                    <div class="form-group label-floating">
+                        <label class="control-label">@lang('labels.password')</label>
+                        <input class="form-control" name="password" type="password">
+                    </div>
 
-                <div class="form-group label-floating">
-                    <label class="control-label">@lang('labels.password_confirmation')</label>
-                    <input class="form-control" name="password_confirmation" type="password">
-                </div>
+                    <div class="form-group label-floating">
+                        <label class="control-label">@lang('labels.password_confirmation')</label>
+                        <input class="form-control" name="password_confirmation" type="password">
+                    </div>
 
-                <button type="submit" class="btn btn-lg btn-primary full-width">ثبت نام</button>
+                    <button type="submit" class="btn btn-lg btn-primary full-width">ثبت نام</button>
 
-                <div class="or"></div>
+                    <div class="or"></div>
 
-            </form>
-            <p>شما یک حساب کاربری دارید؟ <a href="{{ route('login.create') }}"> ورود!</a></p>
+                </form>
+                <p>شما یک حساب کاربری دارید؟ <a href="{{ route('login.create') }}"> ورود!</a></p>
+            </div>
         </div>
     </div>
-
 @endsection

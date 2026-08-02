@@ -24,12 +24,16 @@ class PermissionServiceProvider extends ServiceProvider
     {
         Permission::all()->map(function ($permission) {
             Gate::define($permission->name, function ($user) use ($permission) {
-               return $user->hasPermission($permission);
+                return $user->hasPermission($permission);
             });
         });
 
-        Blade::if('role', function ($role) {
-            return auth()->check() && auth()->user()->hasRole($role);
+        Blade::if('role', function (...$roleNames) {
+            if (!auth()->check()) {
+                return false;
+            }
+
+            return auth()->user()->hasRole(...$roleNames);
         });
     }
 }

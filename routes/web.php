@@ -20,12 +20,10 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
-use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\Topic\BadgeController;
 use App\Http\Controllers\Topic\ReplyController as TopicReplyController;
 use App\Http\Controllers\Topic\TopicController;
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', IndexController::class)
@@ -56,24 +54,39 @@ Route::middleware('auth')->group(function () {
         ->name('comments.store');
 
     Route::prefix('profile')->name('profile.')->group(function () {
+
         Route::get('/', [ProfileController::class, 'edit'])
             ->name('edit');
+
         Route::patch('/', [ProfileController::class, 'update'])
             ->name('update');
+
         Route::delete('/', [ProfileController::class, 'destroy'])
             ->name('destroy');
+
     });
 
     Route::prefix('notification')->name('notification.')->group(function () {
+
         Route::get('/email', [NotificationController::class, 'email'])
             ->name('email');
+
         Route::post('/email', [NotificationController::class, 'sendEmail'])
             ->name('email.send');
+
         Route::get('/sms', [NotificationController::class, 'sms'])
             ->name('sms');
+
         Route::post('/sms', [NotificationController::class, 'sendSms'])
             ->name('sms.send');
+
     });
+
+    Route::get('basket/checkout', [BasketController::class, 'checkoutForm'])
+        ->name('basket.checkout.form');
+
+    Route::post('basket/checkout', [BasketController::class, 'checkout'])
+        ->name('basket.checkout');
 
     Route::post('coupon/apply', [CouponController::class, 'apply'])->name('coupon.apply');
     Route::get('coupon/remove', [CouponController::class, 'remove'])->name('coupon.remove');
@@ -87,35 +100,12 @@ Route::middleware('auth')->group(function () {
     Route::get('file/{file}/delete', [FileController::class, 'delete'])->name('file.delete');
 });
 
-Route::prefix('panel')->middleware('role:admin')->group(function () {
-    Route::get('users', [UserController::class, 'index'])
-        ->name('users.index');
-
-    Route::get('users/{user}/edit', [UserController::class, 'edit'])
-        ->name('users.edit');
-
-    Route::post('users/{user}/update', [UserController::class, 'update'])
-        ->name('users.update');
-
-    Route::get('roles', [RoleController::class, 'index'])
-        ->name('roles.index');
-
-    Route::post('roles', [RoleController::class, 'store'])
-        ->name('roles.store');
-
-    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])
-        ->name('roles.edit');
-
-    Route::post('roles/{role}', [RoleController::class, 'update'])
-        ->name('roles.update');
-});
-
 Route::prefix('products')->group(function () {
     Route::get('/', [ProductController::class, 'index'])
         ->name('products.index');
 });
 
-Route::get('basket/add/{product}', [BasketController::class, 'addToBasket'])
+Route::post('basket/add/{product}', [BasketController::class, 'addToBasket'])
     ->name('basket.add');
 
 Route::get('basket', [BasketController::class, 'index'])
@@ -126,12 +116,6 @@ Route::post('basket/update/{product}', [BasketController::class, 'updateQuantity
 
 Route::get('basket/delete/{product}', [BasketController::class, 'delete'])
     ->name('basket.delete');
-
-Route::middleware('auth')->get('basket/checkout', [BasketController::class, 'checkoutForm'])
-    ->name('basket.checkout.form');
-
-Route::middleware('auth')->post('basket/checkout', [BasketController::class, 'checkout'])
-    ->name('basket.checkout');
 
 Route::post('payment/{gateway}/verify', [PaymentController::class, 'verify'])
     ->name('payment.verify');

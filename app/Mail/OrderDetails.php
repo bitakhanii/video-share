@@ -14,7 +14,7 @@ class OrderDetails extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $order;
+    private Order $order;
     /**
      * Create a new message instance.
      */

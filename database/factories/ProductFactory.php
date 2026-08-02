@@ -23,7 +23,6 @@ class ProductFactory extends Factory
             'price' => fake()->numberBetween(10, 5000) . '000',
             'category_id' => Category::all()->random()->id,
             'stock' => fake()->numberBetween(0, 10),
-            'image' => 'https://picsum.photos/320/240?random=' . rand(1, 120),
         ];
     }
 }

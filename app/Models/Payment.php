@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Payment extends Model
 {
@@ -14,17 +15,29 @@ class Payment extends Model
         'status' => 0,
     ];
 
-    public function isOnline()
+    protected static function booted(): void
+    {
+        static::saving(function (Payment $payment) {
+            if (! $payment->isOnline()) {
+                $payment->gateway = null;
+            }
+        });
+    }
+
+    public function isOnline(): bool
     {
         return $this->method == 'online';
     }
 
-    public function order()
+    /* Relation Methods */
+    public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
     }
 
-    public function confirm(string $refNum, string $gateway = null)
+    /* End Relation Methods */
+
+    public function confirm(string $refNum, string $gateway = null): void
     {
         $this->ref_num = $refNum;
         $this->gateway = $gateway;

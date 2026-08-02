@@ -3,8 +3,11 @@
 namespace App\Models;
 
 use App\Support\Coupon\DiscountManager;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -18,17 +21,30 @@ class Product extends Model
         'image',
     ];
 
-    public function hasStock(int $quantity)
+    /* Accessor Methods */
+    public function image(): Attribute
+    {
+        return Attribute::get(function ($value) {
+            return Storage::url('products/' . $value);
+        });
+    }
+
+    /* End Accessor Methods */
+
+    public function hasStock(int $quantity): bool
     {
         return $this->stock >= $quantity;
     }
 
-    public function orders()
+    /* Relation Methods */
+    public function orders(): BelongsToMany
     {
         return $this->belongsToMany(Order::class);
     }
 
-    public function decrementStock(int $count)
+    /* End Relation Methods */
+
+    public function decrementStock(int $count): int
     {
         return $this->decrement('stock', $count);
     }

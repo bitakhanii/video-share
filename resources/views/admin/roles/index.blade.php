@@ -1,26 +1,26 @@
-@extends('panel.layout')
+@extends('admin.layout')
 @section('panel-content')
 
-    <div class="col-md-8">
-        <div class="card">
+    <div class="card">
+        <div class="card border-0 mb-4">
             <div class="card-header bg-primary text-white fs-4">افزودن نقش جدید</div>
             <div class="card-body">
                 <form action="{{ route('roles.store') }}" method="POST">
                     @csrf
                     <div class="col-md-6">
                         <label for="name">نام نقش</label>
-                        <input class="form-control" name="name" value="{{ old('name') }}">
                         @if($errors->has('name'))
-                            <small class="form-text text-danger">{{ $errors->first('name') }}</small>
+                            <small class="form-text text-danger me-2">{{ $errors->first('name') }}</small>
                         @endif
+                        <input class="form-control" name="name" value="{{ old('name') }}">
                     </div>
 
                     <div class="col-md-6">
                         <label for="persian_name">نام فارسی نقش</label>
-                        <input class="form-control" name="persian_name" value="{{ old('persian_name') }}">
                         @if($errors->has('persian_name'))
-                            <small class="form-text text-danger">{{ $errors->first('persian_name') }}</small>
+                            <small class="form-text text-danger me-2">{{ $errors->first('persian_name') }}</small>
                         @endif
+                        <input class="form-control" name="persian_name" value="{{ old('persian_name') }}">
                     </div>
 
                     <button type="submit" class="btn btn-danger">ذخیره نقش</button>
@@ -28,8 +28,8 @@
             </div>
         </div>
     </div>
-    <div class="col-md-8" style="margin-top: 20px;">
-        <div class="card">
+    <div class="card" style="margin-top: 20px;">
+        <div class="card border-0 mb-4">
             <div class="card-header bg-primary text-white fs-4">لیست نقش‌ها</div>
             <div class="card-body">
                 <table class="table table-striped table-bordered text-end">

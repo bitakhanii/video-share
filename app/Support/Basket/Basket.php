@@ -5,17 +5,21 @@ namespace App\Support\Basket;
 use App\Exceptions\QuantityExceededException;
 use App\Models\Product;
 use App\Support\Storage\Contracts\StorageInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class Basket
 {
-    private $storage;
+    private StorageInterface $storage;
 
     public function __construct(StorageInterface $storage)
     {
         $this->storage = $storage;
     }
 
-    public function add(Product $product, int $quantity)
+    /**
+     * @throws QuantityExceededException
+     */
+    public function add(Product $product, int $quantity): void
     {
         if ($this->has($product)) {
             $quantity = $this->get($product)['quantity'] + $quantity;
@@ -24,7 +28,10 @@ class Basket
         $this->update($product, $quantity);
     }
 
-    public function update(Product $product, int $quantity)
+    /**
+     * @throws QuantityExceededException
+     */
+    public function update(Product $product, int $quantity): void
     {
         if (!$product->hasStock($quantity)) {
             throw new QuantityExceededException();
@@ -33,17 +40,17 @@ class Basket
         $this->storage->set($product->id, ['quantity' => $quantity]);
     }
 
-    public function has($product)
+    public function has(Product $product): bool
     {
         return $this->storage->exists($product->id);
     }
 
-    public function get($product)
+    public function get(Product $product): array
     {
         return $this->storage->get($product->id);
     }
 
-    public function all()
+    public function all(): Collection
     {
         $products = Product::query()->find(array_keys($this->storage->all()));
 
@@ -54,7 +61,7 @@ class Basket
         return $products;
     }
 
-    public function subTotal()
+    public function subTotal(): float|int
     {
         $total = 0;
 
@@ -65,12 +72,12 @@ class Basket
         return $total;
     }
 
-    public function delete($product)
+    public function delete(Product $product): void
     {
         $this->storage->unset($product->id);
     }
 
-    public function itemCount()
+    public function itemCount(): int
     {
         return $this->storage->count();
     }

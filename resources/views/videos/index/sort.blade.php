@@ -1,9 +1,9 @@
-<form class="mt-5" action="#" method="get">
+<form class="mt-4 p-3 bg-light rounded-3 border" action="#" method="get">
 
-    <div class="row">
+    <div class="row g-3 align-items-end">
         <div class="form-group col-md-3">
-            <label for="inputCity">ترتیب بر اساس</label>
-            <select class="form-control" name="sortBy">
+            <label for="inputCity" class="form-label">ترتیب بر اساس</label>
+            <select class="form-select" name="sortBy">
                 <option
                     value="created_at" {{ $sortByQuery == 'created_at' ? 'selected' : '' }}>
                     جدیدترین
@@ -19,8 +19,8 @@
         </div>
 
         <div class="form-group col-md-3">
-            <label for="inputState">مدت زمان</label>
-            <select id="inputState" class="form-control" name="length">
+            <label for="inputState" class="form-label">مدت زمان</label>
+            <select id="inputState" class="form-select" name="length">
                 <option value="" {{ $lengthQuery == null ? 'selected' : '' }}>همه
                 </option>
                 <option value="1" {{ $lengthQuery == 1 ? 'selected' : '' }}>کمتر از ۱۰
@@ -37,8 +37,8 @@
 
         <input type="hidden" name="q" value="{{ request()->query('q') }}">
 
-            <div class="form-group col-md-3" style="margin-top: 29px;">
-                <button type="submit" class="btn btn-primary">فیلتر</button>
-            </div>
+        <div class="form-group col-md-3">
+            <button type="submit" class="btn btn-danger w-100">فیلتر</button>
         </div>
-    </form>
+    </div>
+</form>

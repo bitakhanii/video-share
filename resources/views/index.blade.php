@@ -1,19 +1,28 @@
 @extends('layout')
 @section('content')
 
-    <x-latest-videos></x-latest-videos>
-    <h1 class="new-video-title"><i class="fa fa-bolt"></i> پربازدیدترین ویدیوها</h1>
-    <div class="row">
-        @foreach($mostViewedVideos as $video)
-            <x-video-box :video="$video"></x-video-box>
-        @endforeach
-    </div>
+    <div class="container py-4">
 
-    <h1 class="new-video-title"><i class="fa fa-bolt"></i> محبوب‌ترین‌ها</h1>
-    <div class="row">
-        @foreach($mostPopularVideos as $video)
-            <x-video-box :video="$video"></x-video-box>
-        @endforeach
+        <x-latest-videos></x-latest-videos>
+
+        <section class="video-section mb-5">
+            <h2 class="section-title"><i class="fa fa-bolt"></i> پربازدیدترین ویدیوها</h2>
+            <div class="row g-3">
+                @foreach($mostViewedVideos as $video)
+                    <x-video-box :video="$video"></x-video-box>
+                @endforeach
+            </div>
+        </section>
+
+        <section class="video-section mb-5">
+            <h2 class="section-title"><i class="fa fa-bolt"></i> محبوب‌ترین‌ها</h2>
+            <div class="row g-3">
+                @foreach($mostPopularVideos as $video)
+                    <x-video-box :video="$video"></x-video-box>
+                @endforeach
+            </div>
+        </section>
+
     </div>
 
 @endsection

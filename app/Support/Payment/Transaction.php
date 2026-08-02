@@ -16,24 +16,23 @@ use Illuminate\Support\Str;
 
 class Transaction
 {
-
-    private $requset;
-    private $basket;
-    private $cost;
+    private Request $request;
+    private Basket $basket;
+    private CostInterface $cost;
 
     public function __construct(Request $request, Basket $basket, CostInterface $cost)
     {
-        $this->requset = $request;
+        $this->request = $request;
         $this->basket = $basket;
         $this->cost = $cost;
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function checkout()
     {
-        /* برای اینکه اگه به هر دلیلی خطایی توی عملیات های ساخت سفارش و ساخت پرداخت افتاد اگه ذخیره شده بود چیزی توی دیتابیس حذف بشه و همه چی rollback کنه */
-
         DB::beginTransaction();
-        /* این شروع میکنه این کار رو. */
 
         try {
             $order = $this->makeOrder();
@@ -41,26 +40,26 @@ class Transaction
             $payment = $this->makePayment($order);
 
             DB::commit();
-            /* این باعث میشه که اگه عملیات کلا با موفقیت انجام شد کارها طبق روال عادی انجام بشن و سطور در دیتابیس ذخیره بشن. */
         } catch (\Exception $e) {
             DB::rollBack();
-            /* این باعث میشه که اگه خطایی رخ داد اگه چیزی توی دیتابیس ذخیره شد پاک بشه. */
-            return null;
+            report($e);
+            throw $e;
         }
 
         if ($payment->isOnline()) {
-            return $this->gatewayFactory()->pay($order, $this->cost->getTotalCosts());
+            $this->gatewayFactory()->pay($order, $this->cost->getTotalCosts());
+            exit;
         }
 
         $this->completeOrder($order);
         return $order;
     }
 
-    public function verify()
+    public function verify(): bool
     {
-        $result = $this->gatewayFactory()->verify($this->requset);
+        $result = $this->gatewayFactory()->verify($this->request);
 
-        if ($result == GatewayInterface::TRANSACTION_FAILED) {
+        if ($result['status'] == GatewayInterface::TRANSACTION_FAILED) {
             return false;
         }
 
@@ -75,7 +74,7 @@ class Transaction
         return $this->gatewayFactory()->pay($order, $order->payment->amount);
     }
 
-    private function makeOrder()
+    private function makeOrder(): Order
     {
         $order = Order::create([
             'user_id' => auth()->user()->id,
@@ -88,17 +87,17 @@ class Transaction
         return $order;
     }
 
-    private function makePayment($order)
+    private function makePayment($order): Payment
     {
         return Payment::create([
             'order_id' => $order->id,
-            'method' => $this->requset->method,
-            'gateway' => $this->requset->gateway,
+            'method' => $this->request->method,
+            'gateway' => $this->request->gateway,
             'amount' => $this->cost->getTotalCosts(),
         ]);
     }
 
-    private function products()
+    private function products(): array
     {
         foreach ($this->basket->all() as $product) {
             $products[$product->id] = ['quantity' => $product->quantity];
@@ -109,23 +108,23 @@ class Transaction
 
     private function gatewayFactory()
     {
-        if (!$this->requset->has('gateway')) return resolve(Saman::class);
+        if (!$this->request->has('gateway')) return resolve(Saman::class);
         $gateway = [
             'saman' => Saman::class,
             'pasargad' => Pasargad::class,
-        ][$this->requset->gateway];
+        ][$this->request->gateway];
 
         return resolve($gateway);
     }
 
-    private function normalizeQuantity($order)
+    private function normalizeQuantity($order): void
     {
         foreach ($order->products as $product) {
             $product->decrementStock($product->pivot->quantity);
         }
     }
 
-    private function completeOrder($order)
+    private function completeOrder($order): void
     {
         $this->normalizeQuantity($order);
 

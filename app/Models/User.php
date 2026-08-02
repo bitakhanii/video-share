@@ -89,12 +89,12 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return $this->hasMany(Comment::class);
     }
 
-    /* End Relation Methods */
-
-    public function orders()
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
+
+    /* End Relation Methods */
 
     public function tickets()
     {

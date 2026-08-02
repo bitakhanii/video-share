@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -12,7 +14,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('roles')->get();
-        return view('panel.users.index', compact('users'));
+        return view('admin.users.index', compact('users'));
     }
 
     public function edit(User $user)
@@ -20,17 +22,14 @@ class UserController extends Controller
         $roles = Role::all();
         $permissions = Permission::all();
         $user->load(['roles', 'permissions']);
-        return view('panel.users.edit', compact('roles', 'permissions', 'user'));
+        return view('admin.users.edit', compact('roles', 'permissions', 'user'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $user): RedirectResponse
     {
         $user->refreshPermissions($request->permissions);
         $user->refreshRoles($request->roles);
 
-        return back()->with([
-            'alert' => __('alerts.success.saves', ['attribute' => 'نقش‌ها و دسترسی‌ها']),
-            'alert-type' => 'success',
-        ]);
+        return success_redirect('back', 'saves', 'roles-permissions');
     }
 }

@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(50)->create();
+        //User::factory(50)->create();
         //Product::factory(30)->create();
         //Article::factory(12)->create();
 
@@ -33,5 +33,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);*/
+
+        $this->call([
+            RoleUserSeeder::class,
+            PermissionUserSeeder::class,
+        ]);
     }
 }

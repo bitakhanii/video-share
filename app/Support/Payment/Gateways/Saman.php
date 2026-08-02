@@ -8,16 +8,16 @@ use SoapClient;
 
 class Saman implements GatewayInterface
 {
-    private $merchantID;
-    private $callback;
+    private string $merchantID;
+    private string $callback;
 
     public function __construct()
     {
-        $this->merchantID = '123456789';
-        $this->callback = route('payment.verify', $this->getName());
+        $this->merchantID = config('gateway.saman.merchantID');
+        $this->callback = route('payment.verify', ['saman']);
     }
 
-    public function pay(Order $order, $amount)
+    public function pay(Order $order, $amount): void
     {
         $this->redirectToBank($order, $amount);
     }
@@ -27,7 +27,7 @@ class Saman implements GatewayInterface
         return 'saman';
     }
 
-    public function verify(Request $request)
+    public function verify(Request $request): array
     {
         /*if (!$request->has('State') || $request->State != 'OK') {
             return $this->transactionFailed();
@@ -48,7 +48,7 @@ class Saman implements GatewayInterface
             : $this->transactionFailed();
     }
 
-    private function redirectToBank($order, $amount)
+    private function redirectToBank($order, $amount):void
     {
         echo "<form id='samanPayment' action='https://sep.shaparak.ir/payment.aspx' method='post'>
     <input type='hidden' name='Amount' value='{$amount}' />
@@ -56,17 +56,17 @@ class Saman implements GatewayInterface
     <input type='hidden' name='RedirectURL' value='{$this->callback}' />
     <input type='hidden' name='MID' value='{$this->merchantID}' />
     <script>document.forms['samanPayment'].submit()</script>
-</form>";
+            </form>";
     }
 
-    private function transactionFailed()
+    private function transactionFailed(): array
     {
         return [
             'status' => self::TRANSACTION_FAILED,
         ];
     }
 
-    private function transactionSuccess($order, $refNum)
+    private function transactionSuccess($order, $refNum): array
     {
         return [
             'status' => self::TRANSACTION_SUCCESS,
@@ -76,7 +76,7 @@ class Saman implements GatewayInterface
         ];
     }
 
-    private function getOrder($resNum)
+    private function getOrder($resNum): ?Order
     {
         return Order::query()->where('code', $resNum)->first();
     }
