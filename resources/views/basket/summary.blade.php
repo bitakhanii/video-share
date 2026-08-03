@@ -8,7 +8,7 @@
             <table class='table'>
                 @foreach($cost->getSummary() as $description => $price)
                     <tr>
-                        <td>{{ $description }}</td>
+                        <td class="col-md-6">{{ $description }}</td>
                         <td>{{ number_format($price) }}</td>
                     </tr>
                 @endforeach
@@ -25,9 +25,9 @@
                                     @csrf
                                     <div class="input-group">
                                         <span>{{ session('coupon') }}</span>
-                                        <span class="input-group-btn">
-                                    <button class="btn btn-primary btn-sm  ml-3" type="submit">حذف</button>
-                                </span>
+                                        <span class="input-group-btn ms-2">
+                                            <button class="btn btn-primary btn-sm  ml-3" type="submit">حذف</button>
+                                        </span>
                                     </div>
                                 </form>
                             @else
@@ -36,9 +36,13 @@
                                     <div class="input-group">
                                         <input id='coupon' name='coupon' type="text" class="form-control">
                                         <span class="input-group-btn" style="padding-right: 10px;">
-                                    <button id='coupon-apply' class="btn btn-primary  ml-3" type="submit">اعمال</button>
-                                </span>
+                                            <button id='coupon-apply' class="btn btn-primary  ml-3"
+                                                    type="submit">اعمال</button>
+                                        </span>
                                     </div>
+                                    @error('coupon')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </form>
                             @endif
                         </td>

@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Browsershot\Browsershot;
+use Spatie\Browsershot\Exceptions\CouldNotTakeBrowsershot;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Order extends Model
 {
@@ -35,30 +37,34 @@ class Order extends Model
 
     /* End Relation Methods */
 
-    public function generateInvoice()
+    /**
+     * @throws \Throwable
+     * @throws CouldNotTakeBrowsershot
+     */
+    public function generateInvoice(): void
     {
         $view = view('pdfs.invoice', ['order' => $this]);
         Browsershot::html($view->render())->setChromePath('C:\Program Files\Google\Chrome\Application\chrome.exe')
             ->save($this->invoicePath());
     }
 
-    public function isPaid()
+    public function isPaid(): bool
     {
         return $this->payment->status;
     }
 
-    public function downloadInvoice()
+    public function downloadInvoice(): StreamedResponse
     {
-        $filePath = 'public/invoices/order' . $this->id . '.pdf';
+        $filePath = 'invoices/order' . $this->id . '.pdf';
 
-        if (!Storage::exists($filePath)) {
+        if (!Storage::disk('public')->exists($filePath)) {
             abort(404, 'Invoice not found.');
         }
 
-        return Storage::download($filePath, 'invoice-order-' . $this->id . '.pdf');
+        return Storage::disk('public')->download($filePath, 'invoice-order-' . $this->id . '.pdf');
     }
 
-    public function invoicePath()
+    public function invoicePath(): string
     {
         return storage_path('app/public/invoices/order'. $this->id . '.pdf');
     }

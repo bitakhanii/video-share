@@ -2,22 +2,22 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AparatController;
-use App\Http\Controllers\BasketController;
 use App\Http\Controllers\ChatController;
-use App\Http\Controllers\CouponController;
+use App\Http\Controllers\Checkout\CouponController;
+use App\Http\Controllers\Checkout\OrderController;
+use App\Http\Controllers\Checkout\PaymentController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\Front\BasketController;
 use App\Http\Controllers\Front\CategoryVideoController;
 use App\Http\Controllers\Front\CommentController;
 use App\Http\Controllers\Front\DislikeController;
 use App\Http\Controllers\Front\IndexController;
 use App\Http\Controllers\Front\LikeController;
+use App\Http\Controllers\Front\ProductController;
 use App\Http\Controllers\Front\SearchController;
 use App\Http\Controllers\Front\VideoController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\TicketController;
@@ -88,10 +88,18 @@ Route::middleware('auth')->group(function () {
     Route::post('basket/checkout', [BasketController::class, 'checkout'])
         ->name('basket.checkout');
 
-    Route::post('coupon/apply', [CouponController::class, 'apply'])->name('coupon.apply');
-    Route::get('coupon/remove', [CouponController::class, 'remove'])->name('coupon.remove');
-    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('orders/{order}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
+    Route::post('coupon/apply', [CouponController::class, 'apply'])
+        ->name('coupon.apply');
+
+    Route::get('coupon/remove', [CouponController::class, 'remove'])
+        ->name('coupon.remove');
+
+    Route::get('orders', [OrderController::class, 'index'])
+        ->name('orders.index');
+
+    Route::get('orders/{order}/invoice', [OrderController::class, 'downloadInvoice'])
+        ->name('orders.invoice');
+
     Route::get('orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay');
     Route::get('files', [FileController::class, 'index'])->name('file.index');
     Route::get('file/create', [FileController::class, 'create'])->name('file.create');

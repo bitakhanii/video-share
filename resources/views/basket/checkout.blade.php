@@ -27,8 +27,6 @@
                     </div>
                     <div class="card-body">
 
-                        <x-validation-errors></x-validation-errors>
-
                         <form action="{{ route('basket.checkout') }}" id='checkout-form' method="post">
                             @csrf
                             <ul class="list-group list-group-flush">

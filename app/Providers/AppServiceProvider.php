@@ -101,7 +101,7 @@ class AppServiceProvider extends ServiceProvider
             $basketCost = new BasketCost($app->make(Basket::class));
             $shippingCost = new ShippingCost($basketCost);
             $packCost = new PackCost($shippingCost);
-            $discountCost = new DiscountCost($packCost, $app->make(DiscountManager::class), $basketCost);
+            $discountCost = new DiscountCost($packCost, $app->make(DiscountManager::class));
             return $discountCost;
         });
     }

@@ -23,15 +23,16 @@ class Category extends Model
     {
         return $this->hasMany(Video::class);
     }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
+
     /* End Relation Methods */
 
     public function getRandomVideos(int $count): Collection
     {
         return $this->videos()->with(['user', 'category'])->inRandomOrder()->limit($count)->get();
-    }
-
-    public function products()
-    {
-        return $this->hasMany(Product::class);
     }
 }

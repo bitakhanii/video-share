@@ -95,7 +95,8 @@
                             </div>
                         </a>
 
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="userDropdown">
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="userDropdown"
+                        style="z-index: 10000;">
                             <li><a class="dropdown-item" href="#"><i class="fa fa-edit text-accent me-2"></i>ویرایش پروفایل</a></li>
                             <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="fa fa-shopping-cart text-accent me-2"></i>سفارشات</a></li>
                             <li><a class="dropdown-item" href="{{ route('videos.create') }}"><i class="fa fa-video-camera text-accent me-2"></i>اضافه کردن فیلم</a></li>

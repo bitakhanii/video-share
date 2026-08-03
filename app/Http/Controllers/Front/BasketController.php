@@ -1,14 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Front;
 
 use App\Exceptions\QuantityExceededException;
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Support\Basket\Basket;
 use App\Support\Payment\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use RealRashid\SweetAlert\Facades\Alert;
+use RealRashid\SweetAlert\Toaster;
 
 class BasketController extends Controller
 {
@@ -64,11 +67,14 @@ class BasketController extends Controller
     /**
      * @throws \Throwable
      */
-    public function checkout(Request $request): RedirectResponse
+    public function checkout(Request $request): Toaster|RedirectResponse
     {
-        $this->validateMethod($request);
         try {
+            $this->validateMethod($request);
             $order = $this->transaction->checkout();
+        } catch (ValidationException $e) {
+            Alert::error($e->validator->errors()->first());
+            return back();
         } catch (\Exception $e) {
             return error_redirect('basket.checkout.form', 'problem');
         }

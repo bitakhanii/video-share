@@ -8,7 +8,10 @@ use App\Support\Coupon\Validator\Contracts\AbstractCouponValidator;
 
 class IsBelongsToUser extends AbstractCouponValidator
 {
-    public function validate(Coupon $coupon)
+    /**
+     * @throws IsNotBelongsToUserException
+     */
+    public function validate(Coupon $coupon): void
     {
         if (!auth()->user()->coupons->contains($coupon)) {
             throw new IsNotBelongsToUserException();

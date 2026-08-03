@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Front;
 
+use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Support\Basket\Basket;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {

@@ -6,15 +6,15 @@ use App\Models\Coupon;
 
 abstract class AbstractCouponValidator implements CouponValidatorInterface
 {
-    private $nextValidator;
-    public function setNextValidator(CouponValidatorInterface $validator)
+    private CouponValidatorInterface $nextValidator;
+    public function setNextValidator(CouponValidatorInterface $validator): void
     {
         $this->nextValidator = $validator;
     }
 
     public function validate(Coupon $coupon)
     {
-        if ($this->nextValidator == null) {
+        if (!isset($this->nextValidator)) {
             return true;
         }
 

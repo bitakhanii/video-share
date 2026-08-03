@@ -16,4 +16,5 @@ return [
     'role' => 'نقش',
     'product' => 'محصول',
     'order' => 'سفارش شما',
+    'discount-code' => 'کد تخفیف',
 ];

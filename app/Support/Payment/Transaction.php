@@ -69,9 +69,9 @@ class Transaction
         return true;
     }
 
-    public function orderPay(Order $order)
+    public function orderPay(Order $order): void
     {
-        return $this->gatewayFactory()->pay($order, $order->payment->amount);
+        $this->gatewayFactory()->pay($order, $order->payment->amount);
     }
 
     private function makeOrder(): Order
@@ -109,6 +109,7 @@ class Transaction
     private function gatewayFactory()
     {
         if (!$this->request->has('gateway')) return resolve(Saman::class);
+
         $gateway = [
             'saman' => Saman::class,
             'pasargad' => Pasargad::class,

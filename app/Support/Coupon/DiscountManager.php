@@ -3,9 +3,15 @@
 namespace App\Support\Coupon;
 
 use App\Models\Coupon;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class DiscountManager
 {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function calculateDiscount($totalAmount)
     {
         if (!session()->has('coupon')) return 0;

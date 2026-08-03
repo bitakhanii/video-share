@@ -7,28 +7,28 @@ use App\Support\Cost\Contracts\CostInterface;
 
 class BasketCost implements CostInterface
 {
-    private $basket;
+    private Basket $basket;
     public function __construct(Basket $basket)
     {
         $this->basket = $basket;
     }
 
-    public function getCost()
+    public function getCost(): float|int
     {
         return $this->basket->subTotal();
     }
 
-    public function getTotalCosts()
+    public function getTotalCosts(): float|int
     {
         return $this->getCost();
     }
 
-    public function persianDescription()
+    public function persianDescription(): string
     {
         return 'سبد خرید';
     }
 
-    public function getSummary()
+    public function getSummary(): array
     {
         return [
             $this->persianDescription() => $this->getTotalCosts(),
