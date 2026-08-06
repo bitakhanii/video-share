@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -28,9 +29,19 @@ class PermissionServiceProvider extends ServiceProvider
             });
         });
 
+        Role::all()->map(function ($role) {
+            Gate::define('role:' . $role->name, function ($user) use ($role) {
+                return $user->hasRole($role->name);
+            });
+        });
+
         Blade::if('role', function (...$roleNames) {
             if (!auth()->check()) {
                 return false;
+            }
+
+            if (auth()->guard('admin')) {
+                return true;
             }
 
             return auth()->user()->hasRole(...$roleNames);

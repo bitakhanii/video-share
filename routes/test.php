@@ -45,12 +45,12 @@ Route::get('notify', function () {
     $video = Video::first();
     $user->notify(new VideoProcessed);
 });
-Route::get('file', function () {
+/*Route::get('file', function () {
     // return response()->file(storage_path('app/private/adv.jpg'));
     // return Storage::download('/videos/1.MP4');
     $content = Storage::get('/thumbnails/1.JPG');
     return Response::make($content)->header('content-type', 'image/jpg');
-});
+});*/
 Route::get('duration', function () {
     $path = 'CQdfMG06o2SKy4Bx9B9lkKNgUeZhQOjf2T7YXZqd.mp4';
     $ffmpeg = new FFmpegAdapter($path);

@@ -1,62 +1,113 @@
 @extends('layout')
 
-@section('title' , 'ثبت نام مدیران')
+@section('title', 'ثبت نام مدیران')
 
 @section('content')
 
-    <div class="row justify-content-center">
-        <div class="col-md-8 mt-5">
-            <div class="card">
-                <div class="card-header">
-                    ثبت نام مدیران
-                </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('admin.register') }}">
-                        @csrf
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="email">ایمیل</label>
-                            <div class="col-sm-9"><input type="email" name="email"
-                                                         class="form-control" id="email" value=""
-                                                         aria-describedby="emailHelp">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+
+                <div class="card shadow-lg border-0 rounded-4">
+
+                    <div class="card-header bg-dark text-white text-center py-4 rounded-top-4">
+                        <h3 class="mb-1">ثبت نام مدیران</h3>
+                        <p class="mb-0 text-light small">
+                            اطلاعات زیر را برای ایجاد حساب کاربری وارد کنید.
+                        </p>
+                    </div>
+
+                    <div class="card-body p-4">
+
+                        <x-validation-errors />
+
+                        <form method="POST" action="{{ route('admin.register') }}">
+                            @csrf
+
+                            <div class="mb-3">
+                                <label for="name" class="form-label">نام</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="name"
+                                    name="name"
+                                    value="{{ old('name') }}"
+                                    placeholder="نام مدیر"
+                                    required
+                                    autofocus>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="name">نام</label>
-                            <div class="col-sm-9">
-                                <input value="" type="text" name="name" class="form-control" id="name">
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">ایمیل</label>
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    id="email"
+                                    name="email"
+                                    value="{{ old('email') }}"
+                                    placeholder="example@email.com"
+                                    required>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="password">رمز عبور</label>
-                            <div class="col-sm-9">
-                                <input type="password" name="password" class="form-control"
-                                       id="password">
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">رمز عبور</label>
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="password"
+                                    name="password"
+                                    placeholder="••••••••"
+                                    required>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label"
-                                   for="password_confirmation">تکرار رمز عبور</label>
-                            <div class="col-sm-9">
-                                <input type="password" name="password_confirmation"
-                                       class="form-control"
-                                       id="password_confirmation">
+
+                            <div class="mb-3">
+                                <label for="password_confirmation" class="form-label">
+                                    تکرار رمز عبور
+                                </label>
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="password_confirmation"
+                                    name="password_confirmation"
+                                    placeholder="••••••••"
+                                    required>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="department">بخش</label>
-                            <div class="col-sm-9">
-                                <select class="form-control" id="department" name="department">
+
+                            <div class="mb-4">
+                                <label for="department" class="form-label">بخش</label>
+
+                                <select class="form-select" id="department" name="department">
                                     <option value="0">فنی</option>
                                     <option value="1">مالی</option>
                                     <option value="2">پشتیبانی</option>
                                 </select>
-
                             </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-dark btn-lg">
+                                    ثبت نام
+                                </button>
+                            </div>
+
+                        </form>
+
+                        <hr class="my-4">
+
+                        <div class="text-center">
+                        <span class="text-muted">
+                            قبلاً ثبت‌نام کرده‌اید؟
+                        </span>
+
+                            <a href="{{ route('admin.login.form') }}"
+                               class="text-decoration-none fw-bold ms-1">
+                                ورود به پنل مدیریت
+                            </a>
                         </div>
-                        <button type="submit"
-                                class="btn btn-primary">ثبت‌نام</button>
-                    </form>
+
+                    </div>
+
                 </div>
+
             </div>
         </div>
     </div>

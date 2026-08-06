@@ -2,13 +2,9 @@
 
 namespace App\Providers;
 
-use App\Events\TicketReplid;
+use App\Events\TicketReplied;
 use App\Events\UserRegistered;
-use App\Events\VideoCreated;
 use App\Listeners\ChangeTicketStatus;
-use App\Listeners\CreateThumbnail;
-use App\Listeners\ProcessVideo;
-use App\Listeners\SendEmail;
 use App\Listeners\SendWelcomeMailListener;
 use App\Models\Comment;
 use App\Models\Topic\Reply;
@@ -60,13 +56,8 @@ class AppServiceProvider extends ServiceProvider
         // Paginator::useBootstrapFive();
         Paginator::useBootstrap();
 
-        /*Event::listen(
-            UserRegistered::class,
-            SendWelcomeMailListener::class,
-        );*/
-
         Event::listen(
-            TicketReplid::class,
+            TicketReplied::class,
             ChangeTicketStatus::class,
         );
 

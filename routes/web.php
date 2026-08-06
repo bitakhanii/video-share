@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AparatController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Checkout\CouponController;
@@ -19,8 +18,6 @@ use App\Http\Controllers\Front\VideoController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ReplyController;
-use App\Http\Controllers\TicketController;
 use App\Http\Controllers\Topic\BadgeController;
 use App\Http\Controllers\Topic\ReplyController as TopicReplyController;
 use App\Http\Controllers\Topic\TopicController;
@@ -63,7 +60,6 @@ Route::middleware('auth')->group(function () {
 
         Route::delete('/', [ProfileController::class, 'destroy'])
             ->name('destroy');
-
     });
 
     Route::prefix('notification')->name('notification.')->group(function () {
@@ -79,7 +75,6 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/sms', [NotificationController::class, 'sendSms'])
             ->name('sms.send');
-
     });
 
     Route::get('basket/checkout', [BasketController::class, 'checkoutForm'])
@@ -94,18 +89,34 @@ Route::middleware('auth')->group(function () {
     Route::get('coupon/remove', [CouponController::class, 'remove'])
         ->name('coupon.remove');
 
-    Route::get('orders', [OrderController::class, 'index'])
-        ->name('orders.index');
+    Route::prefix('orders')->name('orders.')->group(function () {
 
-    Route::get('orders/{order}/invoice', [OrderController::class, 'downloadInvoice'])
-        ->name('orders.invoice');
+        Route::get('/', [OrderController::class, 'index'])
+            ->name('index');
 
-    Route::get('orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay');
-    Route::get('files', [FileController::class, 'index'])->name('file.index');
-    Route::get('file/create', [FileController::class, 'create'])->name('file.create');
-    Route::post('file/new', [FileController::class, 'new'])->name('file.new');
-    Route::get('file/{file}', [FileController::class, 'download'])->name('file.download');
-    Route::get('file/{file}/delete', [FileController::class, 'delete'])->name('file.delete');
+        Route::get('{order}/invoice', [OrderController::class, 'downloadInvoice'])
+            ->name('invoice');
+
+        Route::get('{order}/pay', [OrderController::class, 'pay'])
+            ->name('pay');
+    });
+
+    Route::prefix('files')->name('files.')->group(function () {
+        Route::get('/', [FileController::class, 'index'])
+            ->name('index');
+
+        Route::get('create', [FileController::class, 'create'])
+            ->name('create');
+
+        Route::post('upload', [FileController::class, 'upload'])
+            ->name('upload');
+
+        Route::get('{file}', [FileController::class, 'download'])
+            ->name('download');
+
+        Route::get('{file}/delete', [FileController::class, 'delete'])
+            ->name('delete');
+    });
 });
 
 Route::prefix('products')->group(function () {
@@ -113,36 +124,23 @@ Route::prefix('products')->group(function () {
         ->name('products.index');
 });
 
-Route::post('basket/add/{product}', [BasketController::class, 'addToBasket'])
-    ->name('basket.add');
+Route::prefix('basket')->name('basket.')->group(function () {
 
-Route::get('basket', [BasketController::class, 'index'])
-    ->name('basket.index');
+    Route::post('add/{product}', [BasketController::class, 'addToBasket'])
+        ->name('add');
 
-Route::post('basket/update/{product}', [BasketController::class, 'updateQuantity'])
-    ->name('basket.update');
+    Route::get('/', [BasketController::class, 'index'])
+        ->name('index');
 
-Route::get('basket/delete/{product}', [BasketController::class, 'delete'])
-    ->name('basket.delete');
+    Route::post('update/{product}', [BasketController::class, 'updateQuantity'])
+        ->name('update');
+
+    Route::get('delete/{product}', [BasketController::class, 'delete'])
+        ->name('delete');
+});
 
 Route::post('payment/{gateway}/verify', [PaymentController::class, 'verify'])
     ->name('payment.verify');
-
-Route::middleware(['guest:web', 'guest:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('register', [AdminController::class, 'registerForm'])->name('register.form');
-    Route::post('register', [AdminController::class, 'register'])->name('register');
-    Route::get('login', [AdminController::class, 'loginForm'])->name('login.form');
-    Route::post('login', [AdminController::class, 'login'])->name('login');
-});
-
-Route::middleware('auth:web,admin')->prefix('tickets')->group(function () {
-    Route::get('/', [TicketController::class, 'index'])->name('tickets.index');
-    Route::get('/create', [TicketController::class, 'create'])->name('tickets.create');
-    Route::post('/', [TicketController::class, 'store'])->name('tickets.store');
-    Route::get('/{ticket:title}', [TicketController::class, 'show'])->name('tickets.show');
-    Route::post('{ticket}/reply', [ReplyController::class, 'store'])->name('reply.store');
-    Route::get('{ticket}/close', [TicketController::class, 'close'])->name('tickets.close');
-});
 
 Route::middleware('web')->prefix('aparat')->group(function () {
     Route::get('/', [AparatController::class, 'index'])->name('aparat.index');
@@ -174,10 +172,6 @@ Route::middleware('auth')->prefix('chat')->group(function () {
 
 Route::get('logout', function () {
     auth()->logout();
-});
-
-Route::get('admin/logout', function () {
-    auth()->guard('admin')->logout();
 });
 
 require __DIR__ . '/auth.php';

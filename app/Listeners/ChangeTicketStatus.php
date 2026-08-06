@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\TicketReplid;
+use App\Events\TicketReplied;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -19,9 +19,9 @@ class ChangeTicketStatus
     /**
      * Handle the event.
      */
-    public function handle(TicketReplid $event): void
+    public function handle(TicketReplied $event): void
     {
-        if ($event->reply->ticket->isCreated() && $event->user->isAdmin()) {
+        if ($event->reply->ticket->isCreated() && auth('admin')->check()) {
             $event->reply->ticket->replied();
         }
     }

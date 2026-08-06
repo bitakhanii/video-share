@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Events\UserRegistered;
+use App\Http\Controllers\Controller;
 use App\Models\Admin;
-use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
-use Illuminate\Validation\ValidationException;
 
 class AdminController extends Controller
 {
@@ -20,13 +17,13 @@ class AdminController extends Controller
         return view('admin.register');
     }
 
-    public function register(Request $request)
+    public function register(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.Admin::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'department' => ['required'],
+            'department' => ['required', 'int'],
         ]);
 
         $admin = Admin::create([
@@ -38,7 +35,7 @@ class AdminController extends Controller
 
         $this->guard()->login($admin);
 
-        return redirect(route('index', absolute: false));
+        return success_redirect('index', 'welcome');
     }
 
     public function loginForm()
@@ -46,7 +43,7 @@ class AdminController extends Controller
         return view('admin.login');
     }
 
-    public function login(Request $request)
+    public function login(Request $request): RedirectResponse
     {
         $request->validate([
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
@@ -59,13 +56,16 @@ class AdminController extends Controller
             ]);
 
             $request->session()->regenerate();
-            return redirect()->intended();
+            return success_redirect('intended', 'welcome');
         }
 
-        return back()->with([
-            'alert' => __('alerts.danger.login'),
-            'alert-type' => 'danger',
-        ]);
+        return error_redirect('back', 'login');
+    }
+
+    public function logout(): RedirectResponse
+    {
+        auth()->guard('admin')->logout();
+        return success_redirect('index', 'logout');
     }
 
     private function guard()

@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use Hekmatinasser\Verta\Verta;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 class Ticket extends Model
@@ -12,61 +15,80 @@ class Ticket extends Model
         'user_id', 'title', 'content', 'file_path', 'status', 'priority', 'department',
     ];
 
-    public function user()
+    protected $attributes = [
+        'status' => 0,
+    ];
+
+    /* Relation Methods */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function replies()
+    public function replies(): HasMany
     {
         return $this->hasMany(Reply::class);
     }
 
-    public function getPriorityTitleAttribute()
+    /* End Relation Methods */
+
+    /* Accessor Methods */
+    public function priorityTitle(): Attribute
     {
-        return ['کم', 'متوسط', 'زیاد'][$this->priority];
+        return Attribute::get(function () {
+            return ['کم', 'متوسط', 'زیاد'][$this->priority];
+        });
     }
 
-    public function getStatusTitleAttribute()
+    public function statusTitle(): Attribute
     {
-        return ['ایجاد شده', 'ریپلای شده', 'بسته شده'][$this->status];
+        return Attribute::get(function () {
+            return ['ایجاد شده', 'ریپلای شده', 'بسته شده'][$this->status];
+        });
     }
 
-    public function getDepartmentTitleAttribute()
+    public function departmentTitle(): Attribute
     {
-        return ['پشتیبانی', 'فنی', 'مالی'][$this->department];
+        return Attribute::get(function () {
+            return ['پشتیبانی', 'فنی', 'مالی'][$this->department];
+        });
+
     }
 
-    public function getCreatedAtAttribute($value)
+    public function createdAt(): Attribute
     {
-        return (new \Verta($value))->formatDifference();
+        return Attribute::get(function ($value) {
+            return (new \Verta($value))->formatDifference();
+        });
     }
 
-    public function getFile()
+    /* End Accessor Methods */
+
+    public function getFile(): ?string
     {
         return $this->file_path
             ? Storage::url($this->file_path)
             : null;
     }
 
-    public function isCreated()
+    public function isCreated(): bool
     {
-        return $this->status == 0;
+        return $this->status === 0;
     }
 
-    public function replied()
+    public function replied(): void
     {
         $this->status = 1;
         $this->save();
     }
 
-    public function close()
+    public function close(): void
     {
         $this->status = 2;
         $this->save();
     }
 
-    public function isClosed()
+    public function isClosed(): bool
     {
         return $this->status == 2;
     }

@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+@inject('basket', 'App\Support\Basket\Basket')
+    <!DOCTYPE html>
 <html>
 
 <head>
@@ -14,6 +15,7 @@
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
           rel="stylesheet"
           type="text/css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
     <!--Google Fonts-->
     <link
@@ -36,12 +38,34 @@
 <!--======= header =======-->
 
 <style>
-    .site-header{ background: #3a4057; border-bottom:1px solid rgba(255,255,255,.08); }
-    .btn-accent{ background:#FF5A36; color:#fff; }
-    .btn-accent:hover{ background:#e64c26; color:#fff; }
-    .text-accent{ color:#FF5A36 !important; }
-    .btn-link-light{ color:#E8E8F0; text-decoration:none; font-size:14px; }
-    .btn-link-light:hover{ color:#FF5A36; }
+    .site-header {
+        background: #3a4057;
+        border-bottom: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .btn-accent {
+        background: #FF5A36;
+        color: #fff;
+    }
+
+    .btn-accent:hover {
+        background: #e64c26;
+        color: #fff;
+    }
+
+    .text-accent {
+        color: #FF5A36 !important;
+    }
+
+    .btn-link-light {
+        color: #E8E8F0;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .btn-link-light:hover {
+        color: #FF5A36;
+    }
 </style>
 
 <!--======= header =======-->
@@ -58,8 +82,15 @@
                     <i class="fa fa-close"></i>
                 </a>
                 <div id="logo">
-                    <a href="{{ route('index') }}"><img src="{{ Vite::asset('public/img/logo.png') }}" height="32" alt=""></a>
+                    <a href="{{ route('index') }}"><img src="{{ Vite::asset('public/img/logo.png') }}" height="32"
+                                                        alt=""></a>
                 </div>
+
+                <a href="{{ route('basket.index') }}" class="btn btn-outline-light btn-sm me-5">
+                    <i class="fa fa-shopping-basket me-1"></i>
+                    سبد خرید
+                    <span class="badge bg-accent" style="background:#FF5A36;">{{ $basket->itemCount() }}</span>
+                </a>
             </div>
 
             <!-- Search -->
@@ -74,16 +105,10 @@
             </form>
 
             <!-- Actions -->
-            @inject('basket', 'App\Support\Basket\Basket')
+
             <div class="d-flex align-items-center gap-2">
 
-                <a href="{{ route('basket.index') }}" class="btn btn-outline-light btn-sm me-5">
-                    <i class="fa fa-shopping-basket me-1"></i>
-                    سبد خرید
-                    <span class="badge bg-accent" style="background:#FF5A36;">{{ $basket->itemCount() }}</span>
-                </a>
-
-                @auth
+                @auth('web')
                     <div class="dropdown">
                         <a href="#" class="d-flex align-items-center text-light text-decoration-none dropdown-toggle"
                            id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -96,23 +121,48 @@
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="userDropdown"
-                        style="z-index: 10000;">
-                            <li><a class="dropdown-item" href="#"><i class="fa fa-edit text-accent me-2"></i>ویرایش پروفایل</a></li>
-                            <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="fa fa-shopping-cart text-accent me-2"></i>سفارشات</a></li>
-                            <li><a class="dropdown-item" href="{{ route('videos.create') }}"><i class="fa fa-video-camera text-accent me-2"></i>اضافه کردن فیلم</a></li>
-                            <li><a class="dropdown-item" href="{{ route('file.create') }}"><i class="fa fa-upload text-accent me-2"></i>آپلود فایل</a></li>
-                            <li><a class="dropdown-item" href="{{ route('file.index') }}"><i class="fa fa-folder text-accent me-2"></i>فایل‌ها</a></li>
-                            <li><a class="dropdown-item" href="{{ route('two-factor-auth.index') }}"><i class="fa fa-shield text-accent me-2"></i>احراز هویت دو مرحله‌ای</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            style="z-index: 10000;">
+                            <li><a class="dropdown-item" href="#"><i class="fa fa-edit text-accent me-2"></i>ویرایش
+                                    پروفایل</a></li>
+                            <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i
+                                        class="fa fa-shopping-cart text-accent me-2"></i>سفارشات</a></li>
+                            <li><a class="dropdown-item" href="{{ route('videos.create') }}"><i
+                                        class="fa fa-video-camera text-accent me-2"></i>اضافه کردن فیلم</a></li>
+                            <li><a class="dropdown-item" href="{{ route('files.create') }}"><i
+                                        class="fa fa-upload text-accent me-2"></i>آپلود فایل</a></li>
+                            <li><a class="dropdown-item" href="{{ route('files.index') }}"><i
+                                        class="fa fa-folder text-accent me-2"></i>فایل‌ها</a></li>
+                            <li><a class="dropdown-item" href="{{ route('two-factor-auth.index') }}"><i
+                                        class="fa fa-shield text-accent me-2"></i>احراز هویت دو مرحله‌ای</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             @role('admin', 'editor')
-                            <li><a class="dropdown-item" href="{{ route('users.index') }}"><i class="fa fa-tachometer text-accent me-2"></i>پنل مدیریت</a></li>
+                            <li><a class="dropdown-item" href="{{ route('users.index') }}"><i
+                                        class="fa fa-tachometer text-accent me-2"></i>پنل مدیریت</a></li>
                             @endrole
-                            <li><a class="dropdown-item text-danger" href="{{ route('logout') }}"><i class="fa fa-sign-out me-2"></i>خروج</a></li>
+                            <li><a class="dropdown-item text-danger" href="{{ route('logout') }}"><i
+                                        class="fa fa-sign-out me-2"></i>خروج</a></li>
                         </ul>
                     </div>
                 @endauth
 
-                @guest()
+                @auth('admin')
+
+                    <div>شما به عنوان مدیر وارد شده‌اید</div>
+                    <a class="btn btn-outline-light btn-sm btn px-3 me-4" href="{{ route('admin.logout') }}">
+                        خروج
+                    </a>
+
+                @endauth
+
+                @guest('admin')
+                    <a class="btn btn-outline-light btn-sm btn px-3 me-4" href="{{ route('admin.login.form') }}">
+                        ورود مدیران
+                    </a>
+                @endguest
+
+                @guest
                     <a class="btn-link-light" href="{{ route('login.create') }}">ورود</a>
                     <a class="btn btn-accent rounded-pill btn-sm px-3" href="{{ route('register.create') }}">
                         <i class="fa fa-user-plus me-1"></i> ثبت نام

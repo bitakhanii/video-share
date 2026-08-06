@@ -17,4 +17,7 @@ return [
     'product' => 'محصول',
     'order' => 'سفارش شما',
     'discount-code' => 'کد تخفیف',
+    'file' => 'فایل',
+    'ticket' => 'تیکت',
+    'reply' => 'ریپلای',
 ];

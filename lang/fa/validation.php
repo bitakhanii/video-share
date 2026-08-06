@@ -225,5 +225,6 @@ return [
         'code'                     => 'کد',
         'persian_name'             => 'نام فارسی',
         'coupon'                   => 'کد تخفیف',
+        'department'               => 'بخش',
     ],
 ];

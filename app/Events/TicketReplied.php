@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Reply;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,12 +12,11 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TicketReplid
+class TicketReplied
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $reply;
-    public $user;
+    public Reply $reply;
 
     /**
      * Create a new event instance.
@@ -24,7 +24,6 @@ class TicketReplid
     public function __construct(Reply $reply)
     {
         $this->reply = $reply;
-        $this->user = auth()->user();
     }
 
     /**

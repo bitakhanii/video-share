@@ -2,17 +2,20 @@
 
 namespace App\Services\Uploader;
 
-use App\Exceptions\FileHasAlreadyExists;
 use App\Exceptions\FileHasAlreadyExistsException;
 use App\Models\File;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class Uploader
 {
-    private $request;
-    private $storageManager;
+    private Request $request;
+    private StorageManager $storageManager;
     private $file;
-    private $ffmpegService;
+    private FFMpegService $ffmpegService;
+
     public function __construct(Request $request, StorageManager $storageManager, FFMpegService $ffmpegService)
     {
         $this->request = $request;
@@ -21,40 +24,45 @@ class Uploader
         $this->ffmpegService = $ffmpegService;
     }
 
-    public function upload()
+    /**
+     * @throws FileHasAlreadyExistsException
+     * @throws \Throwable
+     */
+    public function upload(): void
     {
         if ($this->hasFileExists()) throw new FileHasAlreadyExistsException('File Has Already Exists.');
-        $this->putFileIntoStorage();
-        $this->saveFileIntoDatabase();
+
+        DB::transaction(function () {
+            $this->putFileIntoStorage();
+            $this->saveFileIntoDatabase();
+        });
     }
 
-    private function putFileIntoStorage()
+    private function putFileIntoStorage(): void
     {
         $method = $this->isPrivate() ? 'putFileAsPrivate' : 'putFileAsPublic';
 
-        return $this->storageManager->$method($this->file->getClientOriginalName(), $this->getType
-        (), $this->file);
+        $this->storageManager->$method($this->file->getClientOriginalName(), $this->getPath(), $this->file);
     }
 
-    private function getType()
+    private function getType(): string
     {
-        return [
-            'image/jpeg' => 'image',
-            'image/jpg' => 'image',
-            'image/png' => 'image',
-            'video/mp4' => 'video',
-            'application/rar' => 'archive',
-            'application/zip' => 'archive',
-            'application/x-zip-compressed' => 'archive',
-        ][$this->file->getClientMimeType()];
+        $mimeType = $this->file->getClientMimeType();
+
+        $type = explode('/', $mimeType)[0];
+        if ($type === 'application') {
+            return 'archive';
+        }
+
+        return $type;
     }
 
-    private function isPrivate()
+    private function isPrivate(): bool
     {
         return $this->request->has('is-private');
     }
 
-    private function saveFileIntoDatabase()
+    private function saveFileIntoDatabase(): void
     {
         $file = File::create([
             'name' => $this->file->getClientOriginalName(),
@@ -67,16 +75,21 @@ class Uploader
         $file->save();
     }
 
-    private function getTime(File $file)
+    private function getTime(File $file): ?int
     {
         if (!$file->isMedia()) return null;
 
         return $this->ffmpegService->durationOf($file->absolutePath());
     }
 
-    private function hasFileExists()
+    private function hasFileExists(): bool
     {
-        return $this->storageManager->hasFileExists($this->file->getClientOriginalName(), $this->getType(),
+        return $this->storageManager->hasFileExists($this->file->getClientOriginalName(), $this->getPath(),
             $this->isPrivate());
+    }
+
+    private function getPath(): string
+    {
+        return Str::plural($this->getType());
     }
 }

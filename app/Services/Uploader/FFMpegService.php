@@ -7,16 +7,16 @@ use FFMpeg\FFProbe;
 
 class FFMpegService
 {
-    private $ffprobe;
+    private FFProbe $ffprobe;
     public function __construct()
     {
         $this->ffprobe = FFProbe::create([
-            'ffprobe.binaries'  => env('FFPROBE_PATH'),
+            'ffprobe.binaries'  => config('services.ffmpeg.ffprobe_path'),
         ]);
     }
 
-    public function durationOf($path)
+    public function durationOf(string $path): int
     {
-        return (int) $this->ffprobe->format($path)->get('duration');
+        return $this->ffprobe->format($path)->get('duration');
     }
 }

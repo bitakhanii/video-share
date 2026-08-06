@@ -6,11 +6,15 @@ use App\Exceptions\FileHasAlreadyExistsException;
 use App\Models\File;
 use App\Services\Uploader\StorageManager;
 use App\Services\Uploader\Uploader;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FileController extends Controller
 {
-    private $uploader;
+    private Uploader $uploader;
+
     public function __construct(Uploader $uploader)
     {
         $this->uploader = $uploader;
@@ -27,38 +31,35 @@ class FileController extends Controller
         return view('files.create');
     }
 
-    public function new(Request $request)
+    public function upload(Request $request): RedirectResponse
     {
         try {
             $this->validate($request);
             $this->uploader->upload();
-            return back()->with([
-                'alert' => __('alerts.success.upload'),
-                'alert-type' => 'success',
-            ]);
+            return success_redirect('files.index', 'upload', 'file');
         } catch (FileHasAlreadyExistsException $e) {
-            return back()->with([
-                'alert' => __('alerts.danger.upload'),
-                'alert-type' => 'danger',
-            ]);
+            return error_redirect('back', 'upload-exists', 'file');
         }
     }
 
-    public function download(File $file)
+    public function download(File $file): StreamedResponse
     {
+        if ($file->is_private) {
+            Gate::authorize('role:admin');
+        }
         return $file->download();
     }
 
-    public function delete(File $file)
+    public function delete(File $file): RedirectResponse
     {
         $file->delete();
         return back();
     }
 
-    private function validate($request)
+    private function validate($request): void
     {
         $request->validate([
-            'file' => ['required', 'file', 'mimes:jpg,jpeg,png,mp4,zip, rar'],
+            'file' => ['required', 'file', 'mimes:jpg,jpeg,png,mp4,mov,mkv,zip,rar'],
         ]);
     }
 }

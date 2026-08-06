@@ -13,8 +13,8 @@ class FFmpegAdapter
     public function __construct(public string $path)
     {
         $ffmpeg = FFMpeg::create([
-            'ffmpeg.binaries' => env('FFMPEG_PATH'),
-            'ffprobe.binaries' => env('FFPROBE_PATH'),
+            'ffmpeg.binaries' => config('services.ffmpeg.ffmpeg_path'),
+            'ffprobe.binaries' => config('services.ffmpeg.ffprobe_path'),
         ]);
 
         $ffprobe = $ffmpeg->getFFProbe();
@@ -25,7 +25,7 @@ class FFmpegAdapter
 
     public function getDuration(): int
     {
-        return (int)$this->video_probe->get('duration');
+        return $this->video_probe->get('duration');
     }
 
     public function getThumbnail(): string

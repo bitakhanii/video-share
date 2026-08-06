@@ -16,6 +16,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -94,22 +95,17 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return $this->hasMany(Order::class);
     }
 
-    /* End Relation Methods */
-
-    public function tickets()
+    public function tickets(): HasMany
     {
         return $this->hasMany(Ticket::class);
     }
 
-    public function replies()
+    public function replies(): MorphMany
     {
         return $this->morphMany(Reply::class, 'repliable');
     }
 
-    public function isAdmin()
-    {
-        return $this instanceof Admin;
-    }
+    /* End Relation Methods */
 
     public function articles()
     {

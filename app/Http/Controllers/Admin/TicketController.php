@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Ticket;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
@@ -17,23 +19,15 @@ class TicketController extends Controller
         return view('tickets.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'title' => ['required', 'string'],
-            'department' => ['required', 'numeric'],
-            'priority' => ['required', 'numeric'],
-            'content' => ['required'],
-        ]);
+        $this->validateTicket($request);
 
         auth()->user()->tickets()->create(
             $request->all() + ['file_path' => $this->uploadFile($request)]
         );
 
-        return back()->with([
-            'alert' => __('alerts.success.create', ['attribute' => 'تیکت']),
-            'alert-type' => 'success',
-        ]);
+        return success_redirect('back', 'create', 'ticket');
     }
 
     public function show(Ticket $ticket)
@@ -41,10 +35,20 @@ class TicketController extends Controller
         return view('tickets.show', compact('ticket'));
     }
 
-    public function close(Ticket $ticket)
+    public function close(Ticket $ticket): RedirectResponse
     {
         $ticket->close();
-        return back();
+        return success_redirect('back', 'close', 'ticket');
+    }
+
+    private function validateTicket(Request $request): void
+    {
+        $request->validate([
+            'title' => ['required', 'string'],
+            'department' => ['required', 'numeric'],
+            'priority' => ['required', 'numeric'],
+            'content' => ['required'],
+        ]);;
     }
 
     private function uploadFile($request)

@@ -12,7 +12,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::prefix('v1')->group(function () {
-    Route::apiResource('videos', VideoController::class);
+    Route::apiResource('videos', VideoController::class)->names('api.videos');
 });
 
 Route::prefix('v1')->group(function () {
